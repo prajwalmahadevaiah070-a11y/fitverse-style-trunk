@@ -14,35 +14,41 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className="min-h-screen bg-black text-white antialiased">
-        {/* Top Minimal Dispatch Strip */}
-        <div className="w-full bg-[#0d0d0d] py-2 text-center text-[9px] uppercase tracking-[0.35em] text-zinc-400 border-b border-white/[0.05]">
-          Complimentary Doorstep Home Trial Atelier · Bengaluru
+      <body className="min-h-screen bg-[#050505] text-white antialiased">
+        {/* Top Whispered Banner */}
+        <div className="w-full bg-[#000000] py-2 text-center text-[8px] sm:text-[9px] uppercase tracking-[0.4em] text-zinc-400 hairline-b">
+          By Appointment · Private Doorstep Home Trials · Bengaluru
         </div>
 
-        {/* The Centered Maison Header */}
-        <header className="sticky top-0 z-50 w-full bg-black/90 backdrop-blur-md border-b border-white/[0.08]">
-          <div className="mx-auto flex flex-col items-center justify-center pt-5 pb-3 px-6">
+        {/* The Centered Editorial Header */}
+        <header className="sticky top-0 z-50 w-full bg-[#050505]/95 backdrop-blur-md hairline-b">
+          <div className="mx-auto flex flex-col items-center justify-center pt-6 pb-4 px-6">
             {/* Centered Brand Title */}
             <Link
               href="/"
-              className="font-serif text-3xl sm:text-4xl lg:text-5xl font-light tracking-[0.35em] uppercase text-white hover:text-zinc-300 transition-colors"
+              className="font-couture text-3xl sm:text-4xl lg:text-5xl font-normal tracking-[0.4em] text-white hover:text-zinc-300 transition-colors"
             >
               PETIKARA
             </Link>
+            <span className="text-[8px] uppercase tracking-[0.5em] text-zinc-500 mt-1">
+              HAUTE COUTURE MAISON
+            </span>
 
-            {/* Sub-Navigation Categories */}
-            <nav className="flex items-center gap-8 sm:gap-12 mt-4 text-[10px] uppercase tracking-[0.25em] text-zinc-400 font-light">
+            {/* Symmetrical High-Fashion Navigation */}
+            <nav className="flex items-center gap-6 sm:gap-10 mt-5 text-[9px] sm:text-[10px] uppercase tracking-[0.3em] text-zinc-400 font-light">
               <Link href="/#women" className="hover:text-white transition-colors">Women</Link>
               <Link href="/#men" className="hover:text-white transition-colors">Men</Link>
-              <Link href="/#kids" className="hover:text-white transition-colors">Junior Atelier</Link>
+              <Link href="/#junior" className="hover:text-white transition-colors">Junior Atelier</Link>
+              <Link href="/#ritual" className="hover:text-white transition-colors">The Ritual</Link>
               <Link href="/studio" className="hover:text-white transition-colors">Digital Atelier</Link>
-              <Link href="/trunk" className="text-white hover:text-zinc-300 transition-colors">Doorstep Trunk</Link>
+              <Link href="/trunk" className="text-white hover:text-zinc-300 transition-colors border-b border-white pb-0.5">
+                The Trunk
+              </Link>
             </nav>
           </div>
         </header>
 
-        {/* Content Container */}
+        {/* Canvas Body */}
         <main className="w-full">
           {children}
         </main>
