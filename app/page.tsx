@@ -1,48 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { useFitVerse } from '@/lib/fitverse-store'
 import { formatINR } from '@/lib/fitverse-types'
 
-const CAMPAIGNS = [
-  {
-    title: 'THE IMPERIAL WEAVES',
-    subtitle: 'Heirloom Kadhwa Zari Silks & Handcrafted Bridal Lehengas',
-    tag: 'FESTIVE / BRIDAL 2026',
-    image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1920&q=85',
-  },
-  {
-    title: 'MEN & BESPOKE HEIRS',
-    subtitle: 'Architectural Micro-Velvet Bandhgalas and Chanderi Achkans',
-    tag: 'ROYAL PATRONS COLLECTION',
-    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1920&q=85',
-  },
-  {
-    title: 'THE JUNIOR ATELIER',
-    subtitle: 'Pure Mulmul Linings, Zero Scratch. Gentle festive couture for children.',
-    tag: 'NANHE THREADS',
-    image: 'https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?auto=format&fit=crop&w=1920&q=85',
-  },
-]
-
 export default function HomePage() {
   const { products, addToTrunk } = useFitVerse()
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const [activeTab, setActiveTab] = useState<'all' | 'women' | 'men' | 'kids'>('all')
   const [addedId, setAddedId] = useState<string | null>(null)
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % CAMPAIGNS.length)
-    }, 7000)
-    return () => clearInterval(timer)
-  }, [])
-
-  const filteredProducts = (products || []).filter((p) => {
-    if (activeTab === 'all') return true
-    return p.gender === activeTab
-  })
 
   const handleAdd = (id: string) => {
     addToTrunk(id, 'Standard')
@@ -50,241 +15,181 @@ export default function HomePage() {
     setTimeout(() => setAddedId(null), 2000)
   }
 
+  const womenItems = (products || []).filter((p) => p.gender === 'women')
+  const menItems = (products || []).filter((p) => p.gender === 'men')
+  const kidsItems = (products || []).filter((p) => p.gender === 'kids')
+
   return (
-    <div className="w-full bg-[#0a0d12] text-[#f5f5f5] pb-32">
-      {/* 1. MANISH MALHOTRA-STYLE FULL-BLEED CAMPAIGN CANVAS */}
-      <section className="relative h-[92vh] min-h-[640px] w-full overflow-hidden border-b border-white/[0.08]">
-        {CAMPAIGNS.map((slide, index) => (
-          <div
-            key={slide.title}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
-            }`}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={slide.image}
-              alt={slide.title}
-              className="h-full w-full object-cover object-center"
-              style={{
-                transform: index === currentSlide ? 'scale(1)' : 'scale(1.06)',
-                transition: 'transform 8s cubic-bezier(0.25, 1, 0.5, 1)',
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0d12] via-[#0a0d12]/40 to-black/30" />
-          </div>
-        ))}
+    <div className="w-full bg-black text-white pb-32">
+      
+      {/* 1. 100VH FULL BLEED EDITORIAL HERO */}
+      <section className="relative h-[94vh] min-h-[640px] w-full overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=2400&q=90"
+          alt="Petikara Campaign"
+          className="h-full w-full object-cover object-center scale-100 animate-pulse duration-[10000ms]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/40" />
 
-        <div className="relative z-20 mx-auto flex h-full max-w-7xl flex-col justify-end px-8 pb-24 text-center items-center">
-          <div className="max-w-3xl space-y-6">
-            <p className="text-[10px] uppercase tracking-[0.4em] text-[#d4af37]">
-              {CAMPAIGNS[currentSlide].tag}
-            </p>
-
-            <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-light tracking-[0.2em] text-white">
-              {CAMPAIGNS[currentSlide].title}
-            </h1>
-
-            <p className="text-xs sm:text-sm text-zinc-300 font-light tracking-[0.15em] uppercase max-w-xl mx-auto">
-              {CAMPAIGNS[currentSlide].subtitle}
-            </p>
-
-            <div className="pt-4 flex justify-center items-center gap-6">
-              <Link
-                href="/studio"
-                className="border border-[#d4af37] bg-[#d4af37] px-8 py-3.5 text-[10px] uppercase tracking-[0.25em] font-semibold text-black hover:bg-transparent hover:text-[#d4af37] transition-all"
-              >
-                Enter Digital Atelier
-              </Link>
-              <a
-                href="#wardrobe"
-                className="border border-white/40 bg-black/40 backdrop-blur-md px-8 py-3.5 text-[10px] uppercase tracking-[0.25em] font-medium text-white hover:border-white transition-all"
-              >
-                View Collections
-              </a>
-            </div>
-          </div>
-
-          <div className="mt-14 flex items-center gap-3">
-            {CAMPAIGNS.map((_, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => setCurrentSlide(idx)}
-                aria-label={`Campaign ${idx + 1}`}
-                className={`h-[2px] transition-all ${
-                  idx === currentSlide ? 'w-14 bg-[#d4af37]' : 'w-4 bg-white/30'
-                }`}
-              />
-            ))}
+        <div className="absolute inset-0 flex flex-col items-center justify-end pb-20 px-6 text-center z-10">
+          <p className="text-[10px] uppercase tracking-[0.4em] text-zinc-300 mb-3">
+            FESTIVE / COUTURE 2026
+          </p>
+          <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-light tracking-[0.25em] text-white uppercase max-w-4xl leading-tight">
+            The Royal Atelier
+          </h1>
+          <p className="text-xs uppercase tracking-[0.25em] text-zinc-400 font-light mt-4 max-w-md">
+            Handcrafted Banarasi, Jodhpur Velvet, and Chanderi Weaves. Delivered to your doorstep for a private 1-hour fitting.
+          </p>
+          <div className="mt-8 flex items-center gap-6">
+            <a
+              href="#categories"
+              className="border border-white/60 bg-white/10 backdrop-blur-sm px-8 py-3 text-[10px] uppercase tracking-[0.25em] text-white hover:bg-white hover:text-black transition-all"
+            >
+              Explore Collections
+            </a>
+            <Link
+              href="/studio"
+              className="border border-white/30 px-8 py-3 text-[10px] uppercase tracking-[0.25em] text-white hover:border-white transition-all"
+            >
+              Digital Studio
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* 2. THE 4-STEP DOORSTEP RITUAL */}
-      <section id="ritual" className="mx-auto max-w-7xl px-8 mt-32">
-        <div className="text-center max-w-xl mx-auto space-y-3 mb-20">
-          <p className="text-[10px] uppercase tracking-[0.35em] text-[#d4af37]">THE MAISON EXPERIENCE</p>
-          <h2 className="font-serif text-3xl sm:text-5xl font-light tracking-[0.15em] text-white">
-            The Doorstep Ritual
+      {/* 2. THREE-PILLAR CATEGORY GRID (Women / Men / Kids) */}
+      <section id="categories" className="grid grid-cols-1 md:grid-cols-3 w-full border-t border-b border-white/[0.08]">
+        {[
+          {
+            title: 'WOMEN',
+            sub: 'Heirloom Kadhwa & Bridal Weaves',
+            link: '#women',
+            img: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1200&q=85',
+          },
+          {
+            title: 'MEN',
+            sub: 'Royal Bandhgalas & Achkans',
+            link: '#men',
+            img: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=85',
+          },
+          {
+            title: 'JUNIOR ATELIER',
+            sub: 'Hypoallergenic Linings · Zero Scratch',
+            link: '#kids',
+            img: 'https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?auto=format&fit=crop&w=1200&q=85',
+          },
+        ].map((col) => (
+          <a
+            key={col.title}
+            href={col.link}
+            className="group relative h-[75vh] min-h-[500px] overflow-hidden border-b md:border-b-0 md:border-r border-white/[0.08] flex items-end p-10 text-left"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={col.img}
+              alt={col.title}
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105 filter brightness-90"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+            <div className="relative z-10 space-y-2">
+              <h2 className="font-serif text-3xl sm:text-4xl font-light tracking-[0.2em] text-white">
+                {col.title}
+              </h2>
+              <p className="text-[10px] uppercase tracking-[0.25em] text-zinc-400 font-light">
+                {col.sub}
+              </p>
+              <span className="inline-block pt-2 text-[10px] uppercase tracking-[0.3em] text-white border-b border-white pb-1">
+                View Gallery →
+              </span>
+            </div>
+          </a>
+        ))}
+      </section>
+
+      {/* 3. THE 4-PIECE DOORSTEP RITUAL */}
+      <section className="mx-auto max-w-6xl px-6 py-28 text-center space-y-16">
+        <div className="space-y-3">
+          <p className="text-[10px] uppercase tracking-[0.35em] text-zinc-400">THE MAISON SERVICE</p>
+          <h2 className="font-serif text-3xl sm:text-5xl font-light tracking-[0.2em] text-white">
+            The Doorstep Fitting Ritual
           </h2>
-          <div className="w-12 h-[1px] bg-[#d4af37] mx-auto mt-4" />
+          <div className="w-12 h-[1px] bg-white/40 mx-auto mt-4" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 text-left">
           {[
             {
               roman: 'I',
-              title: 'Curation of Four',
-              desc: 'Select up to 4 heirloom creations across Women, Men, and Kids without paying for garments upfront.',
+              title: 'Curate 4 Outfits',
+              desc: 'Select any 4 pieces across Women, Men, and Kids. Pay only a ₹199 trial deposit.',
             },
             {
               roman: 'II',
-              title: 'Virtual Atelier Drape',
-              desc: 'Preview dynamic fabric reflection and banquet luster inside the Petikara digital lighting studio.',
+              title: 'White-Glove Delivery',
+              desc: 'Our style concierge delivers the antique wooden trunk to your residence at your selected slot.',
             },
             {
               roman: 'III',
-              title: 'The 1-Hour Fitting',
-              desc: 'Delivered in an antique wooden trunk to your residence. Try pieces in private with your personal jewelry.',
+              title: 'Private 1-Hour Fitting',
+              desc: 'Try garments at your pace, in your home, with family and your personal jewelry.',
             },
             {
               roman: 'IV',
-              title: 'Bespoke Retention',
-              desc: 'Retain only what you adore. Your ₹199 doorstep trial deposit is adjusted upon selection.',
+              title: 'Keep What You Love',
+              desc: 'Keep only what fits perfectly. The trial deposit is 100% adjusted into your purchase.',
             },
-          ].map((card) => (
-            <div
-              key={card.roman}
-              className="border-t border-white/[0.12] pt-8 space-y-4 text-left"
-            >
-              <span className="font-serif text-2xl text-[#d4af37] font-light">{card.roman}</span>
-              <h3 className="font-serif text-lg tracking-[0.1em] text-white uppercase">{card.title}</h3>
-              <p className="text-xs text-zinc-400 font-light leading-relaxed tracking-wider">
-                {card.desc}
-              </p>
+          ].map((step) => (
+            <div key={step.roman} className="space-y-3 border-t border-white/[0.12] pt-6">
+              <span className="font-serif text-2xl text-zinc-400 font-light">{step.roman}</span>
+              <h3 className="font-serif text-lg tracking-[0.1em] text-white uppercase">{step.title}</h3>
+              <p className="text-xs text-zinc-400 font-light leading-relaxed tracking-wider">{step.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* 3. JUNIOR ATELIER: PARENT & FAMILY LUXURY */}
-      <section className="mx-auto max-w-7xl px-8 mt-36">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center border border-white/[0.08] bg-white/[0.02] p-10 sm:p-16">
-          <div className="lg:col-span-6 space-y-6">
-            <p className="text-[10px] uppercase tracking-[0.35em] text-[#d4af37]">THE JUNIOR MAISON</p>
-            <h2 className="font-serif text-3xl sm:text-5xl font-light tracking-wide text-white leading-tight">
-              Festive Dressing for Heirs, Without the Tears.
-            </h2>
-            <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed tracking-wider">
-              No long drives or chaotic fitting room queues. Children try gentle, 100% mulmul-lined silk pieces at home in their own sanctuary.
-            </p>
-            <div className="space-y-3 pt-2 text-xs text-zinc-300 font-light tracking-wider">
-              <p>— 100% Breathable Mulmul Hypoallergenic Linings</p>
-              <p>— Scratch-Free Handloom Seams & Concealed Zari</p>
-              <p>— Harmonized Father-Son & Mother-Daughter Twinning</p>
-            </div>
-            <div className="pt-4">
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveTab('kids')
-                  document.getElementById('wardrobe')?.scrollIntoView({ behavior: 'smooth' })
-                }}
-                className="border-b border-[#d4af37] pb-1 text-[10px] uppercase tracking-[0.3em] text-[#d4af37] hover:text-white transition-colors"
-              >
-                Explore Junior Line →
-              </button>
-            </div>
-          </div>
-
-          <div className="lg:col-span-6 aspect-[4/3] overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?auto=format&fit=crop&w=900&q=80"
-              alt="Junior Atelier"
-              className="h-full w-full object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-700"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* 4. BALANCED COUTURE GALLERY (4 Women · 4 Men · 4 Kids) */}
-      <section id="wardrobe" className="mx-auto max-w-7xl px-8 mt-36 space-y-12">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-white/[0.08] pb-6">
+      {/* 4. WOMEN'S HAUTE COUTURE GALLERY */}
+      <section id="women" className="mx-auto max-w-7xl px-6 py-16 space-y-10">
+        <div className="border-b border-white/[0.08] pb-6 flex justify-between items-end">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.35em] text-[#d4af37]">THE ATELIER WARDROBE</p>
-            <h2 className="font-serif text-3xl sm:text-5xl font-light tracking-wide text-white">
-              Heirloom Creations
+            <p className="text-[9px] uppercase tracking-[0.35em] text-zinc-400">HERITAGE TEXTILES</p>
+            <h2 className="font-serif text-3xl sm:text-4xl font-light tracking-[0.15em] text-white mt-1">
+              Women’s Couture
             </h2>
           </div>
-
-          <div className="flex items-center gap-6 text-[10px] uppercase tracking-[0.25em]">
-            {(
-              [
-                { id: 'all', label: 'All' },
-                { id: 'women', label: 'Women' },
-                { id: 'men', label: 'Men' },
-                { id: 'kids', label: 'Junior' },
-              ] as const
-            ).map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id)}
-                className={`transition-colors ${
-                  activeTab === tab.id ? 'text-[#d4af37] border-b border-[#d4af37] pb-1' : 'text-zinc-500 hover:text-white'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+          <Link href="/trunk" className="text-[10px] uppercase tracking-[0.25em] text-zinc-400 hover:text-white">
+            Trunk View →
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {filteredProducts.map((p) => {
-            const img =
-              (p as any).imageUrl ??
-              'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80'
+          {womenItems.map((p) => {
             const isAdded = addedId === p.id
             return (
-              <div
-                key={p.id}
-                className="group relative flex flex-col justify-between text-left space-y-4"
-              >
-                <div className="relative aspect-[3/4] w-full overflow-hidden bg-black/40">
+              <div key={p.id} className="group flex flex-col justify-between space-y-4">
+                <div className="relative aspect-[3/4] w-full overflow-hidden bg-neutral-950">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={img}
+                    src={(p as any).imageUrl}
                     alt={p.name}
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute top-3 left-3 text-[8px] uppercase tracking-[0.25em] text-white/80 bg-black/60 px-2 py-1">
-                    {p.gender}
-                  </div>
                 </div>
-
                 <div className="space-y-1">
-                  <p className="text-[9px] uppercase tracking-[0.25em] text-[#d4af37]">
-                    {p.brand} · {p.city}
-                  </p>
-                  <h3 className="font-serif text-base font-normal tracking-wider text-white">
-                    {p.name}
-                  </h3>
-                  <p className="text-xs text-zinc-400 font-light tracking-wide">{formatINR(p.price)}</p>
+                  <p className="text-[9px] uppercase tracking-[0.25em] text-zinc-400">{p.brand}</p>
+                  <h3 className="font-serif text-base font-normal tracking-wide text-white">{p.name}</h3>
+                  <p className="text-xs text-zinc-300 font-light">{formatINR(p.price)}</p>
                 </div>
-
                 <button
                   type="button"
                   onClick={() => handleAdd(p.id)}
-                  className={`w-full py-2.5 text-[9px] uppercase tracking-[0.25em] font-medium border transition-all ${
-                    isAdded
-                      ? 'border-white bg-white text-black'
-                      : 'border-white/20 text-white hover:border-[#d4af37] hover:text-[#d4af37]'
+                  className={`w-full py-2.5 text-[9px] uppercase tracking-[0.25em] border transition-all ${
+                    isAdded ? 'bg-white text-black border-white' : 'border-white/20 text-white hover:border-white'
                   }`}
                 >
-                  {isAdded ? 'Added to Trunk' : 'Select For Home Trial'}
+                  {isAdded ? 'Added to Trunk' : 'Add to Doorstep Trunk'}
                 </button>
               </div>
             )
@@ -292,16 +197,110 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. EDITORIAL MAISON FOOTNOTE */}
-      <footer className="mx-auto max-w-7xl px-8 mt-44 border-t border-white/[0.08] pt-20 text-center space-y-6">
-        <p className="font-serif text-3xl tracking-[0.4em] text-white uppercase">
+      {/* 5. MEN'S REGAL ATELIER GALLERY */}
+      <section id="men" className="mx-auto max-w-7xl px-6 py-16 space-y-10">
+        <div className="border-b border-white/[0.08] pb-6 flex justify-between items-end">
+          <div>
+            <p className="text-[9px] uppercase tracking-[0.35em] text-zinc-400">ROYAL PATRONS</p>
+            <h2 className="font-serif text-3xl sm:text-4xl font-light tracking-[0.15em] text-white mt-1">
+              Men’s Couture
+            </h2>
+          </div>
+          <Link href="/trunk" className="text-[10px] uppercase tracking-[0.25em] text-zinc-400 hover:text-white">
+            Trunk View →
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {menItems.map((p) => {
+            const isAdded = addedId === p.id
+            return (
+              <div key={p.id} className="group flex flex-col justify-between space-y-4">
+                <div className="relative aspect-[3/4] w-full overflow-hidden bg-neutral-950">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={(p as any).imageUrl}
+                    alt={p.name}
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <p className="text-[9px] uppercase tracking-[0.25em] text-zinc-400">{p.brand}</p>
+                  <h3 className="font-serif text-base font-normal tracking-wide text-white">{p.name}</h3>
+                  <p className="text-xs text-zinc-300 font-light">{formatINR(p.price)}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleAdd(p.id)}
+                  className={`w-full py-2.5 text-[9px] uppercase tracking-[0.25em] border transition-all ${
+                    isAdded ? 'bg-white text-black border-white' : 'border-white/20 text-white hover:border-white'
+                  }`}
+                >
+                  {isAdded ? 'Added to Trunk' : 'Add to Doorstep Trunk'}
+                </button>
+              </div>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* 6. JUNIOR ATELIER (KIDS) */}
+      <section id="kids" className="mx-auto max-w-7xl px-6 py-16 space-y-10">
+        <div className="border-b border-white/[0.08] pb-6 flex justify-between items-end">
+          <div>
+            <p className="text-[9px] uppercase tracking-[0.35em] text-zinc-400">NANHE THREADS</p>
+            <h2 className="font-serif text-3xl sm:text-4xl font-light tracking-[0.15em] text-white mt-1">
+              Junior Atelier
+            </h2>
+          </div>
+          <Link href="/trunk" className="text-[10px] uppercase tracking-[0.25em] text-zinc-400 hover:text-white">
+            Trunk View →
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {kidsItems.map((p) => {
+            const isAdded = addedId === p.id
+            return (
+              <div key={p.id} className="group flex flex-col justify-between space-y-4">
+                <div className="relative aspect-[3/4] w-full overflow-hidden bg-neutral-950">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={(p as any).imageUrl}
+                    alt={p.name}
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <p className="text-[9px] uppercase tracking-[0.25em] text-zinc-400">{p.brand}</p>
+                  <h3 className="font-serif text-base font-normal tracking-wide text-white">{p.name}</h3>
+                  <p className="text-xs text-zinc-300 font-light">{formatINR(p.price)}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleAdd(p.id)}
+                  className={`w-full py-2.5 text-[9px] uppercase tracking-[0.25em] border transition-all ${
+                    isAdded ? 'bg-white text-black border-white' : 'border-white/20 text-white hover:border-white'
+                  }`}
+                >
+                  {isAdded ? 'Added to Trunk' : 'Add to Doorstep Trunk'}
+                </button>
+              </div>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* 7. EDITORIAL FOOTER */}
+      <footer className="border-t border-white/[0.08] pt-24 pb-16 text-center space-y-6">
+        <p className="font-serif text-3xl sm:text-4xl tracking-[0.35em] text-white uppercase">
           PETIKARA
         </p>
-        <p className="text-xs uppercase tracking-[0.3em] text-zinc-500 max-w-md mx-auto font-light">
+        <p className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 max-w-sm mx-auto font-light">
           Private Doorstep Trial Atelier for Indian Handwoven Couture. Bengaluru.
         </p>
         <p className="text-[9px] uppercase tracking-[0.3em] text-zinc-600">
-          © {new Date().getFullYear()} Petikara. All rights reserved.
+          © {new Date().getFullYear()} Petikara Maison. All rights reserved.
         </p>
       </footer>
     </div>
