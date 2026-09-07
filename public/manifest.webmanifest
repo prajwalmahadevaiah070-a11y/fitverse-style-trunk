@@ -1,0 +1,11 @@
+{
+  "name": "FitVerse — Home Try-On Fashion",
+  "short_name": "FitVerse",
+  "description": "Indian fashion marketplace with doorstep home try-on.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#14181f",
+  "theme_color": "#14181f",
+  "icons": [{ "src": "/favicon.ico", "sizes": "48x48", "type": "image/x-icon" }]
+}
