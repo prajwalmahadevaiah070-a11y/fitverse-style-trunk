@@ -1,285 +1,213 @@
 'use client'
 
-import Link from 'next/link'
 import { useState } from 'react'
-import { toast } from 'sonner'
-import {
-  Briefcase,
-  CalendarClock,
-  CheckCircle2,
-  MapPin,
-  Trash2,
-} from 'lucide-react'
-
-import { GarmentSwatch } from '@/components/GarmentSwatch'
-import { PaymentModal, type CheckoutDetails } from '@/components/PaymentModal'
-import { Screen } from '@/components/Screen'
+import Link from 'next/link'
 import { useFitVerse } from '@/lib/fitverse-store'
-import {
-  formatINR,
-  TRIAL_DEPOSIT,
-  TRUNK_CAP,
-} from '@/lib/fitverse-types'
-import { cn } from '@/lib/utils'
-
-const SLOTS = [
-  'Today · 6–7 PM',
-  'Today · 7–8 PM',
-  'Tomorrow · 10–11 AM',
-  'Tomorrow · 12–1 PM',
-  'Tomorrow · 5–6 PM',
-  'Tomorrow · 7–8 PM',
-]
-
-const empty: CheckoutDetails = {
-  name: '',
-  phone: '',
-  address: '',
-  pincode: '',
-  slot: '',
-}
+import { formatINR } from '@/lib/fitverse-types'
 
 export default function TrunkPage() {
-  const { trunk, productById, removeFromTrunk, hydrated } = useFitVerse()
-  const [form, setForm] = useState<CheckoutDetails>(empty)
-  const [showPayment, setShowPayment] = useState(false)
-  const [done, setDone] = useState(false)
+  const { trunk, products, removeFromTrunk, clearTrunk, placeOrder } = useFitVerse()
+  const [address, setAddress] = useState('')
+  const [slot, setSlot] = useState('Tomorrow, 11:00 AM - 12:00 PM')
+  const [confirmed, setConfirmed] = useState(false)
 
-  const items = trunk
-    .map((i) => ({ item: i, product: productById(i.productId) }))
-    .filter((x) => x.product)
-  const garmentValue = items.reduce((s, x) => s + (x.product?.price ?? 0), 0)
+  const trunkItems = trunk
+    .map((item) => {
+      const product = products.find((p) => p.id === item.productId)
+      return { ...item, product }
+    })
+    .filter((item): item is typeof item & { product: NonNullable<typeof item.product> } => Boolean(item.product))
 
-  const set = (k: keyof CheckoutDetails, v: string) =>
-    setForm((f) => ({ ...f, [k]: v }))
+  const totalValue = trunkItems.reduce((sum, item) => sum + item.product.price, 0)
+  const deposit = 199
 
-  const validate = () => {
-    if (form.name.trim().length < 2) return 'Enter your full name'
-    if (!/^\d{10}$/.test(form.phone)) return 'Enter a valid 10-digit phone number'
-    if (form.address.trim().length < 8) return 'Enter your complete street address'
-    if (!/^\d{6}$/.test(form.pincode)) return 'Enter a valid 6-digit pincode'
-    if (!form.slot) return 'Pick a preferred 1-hour trial slot'
-    return null
+  const handleBookTrial = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!address.trim()) return
+
+    placeOrder({
+      items: trunk,
+      customerName: 'Patron',
+      customerPhone: '+91 98000 00000',
+      address,
+      preferredSlot: slot,
+      garmentValue: totalValue,
+    })
+
+    setConfirmed(true)
+    clearTrunk()
   }
 
-  const proceed = () => {
-    const err = validate()
-    if (err) {
-      toast.error(err)
-      return
-    }
-    setShowPayment(true)
-  }
-
-  if (!hydrated) {
+  if (confirmed) {
     return (
-      <div className="grid min-h-[60dvh] place-items-center text-sm text-muted-foreground">
-        Loading…
+      <div className="mx-auto max-w-2xl px-6 py-24 text-center space-y-6">
+        <p className="text-[10px] uppercase tracking-[0.4em] text-[#d4af37]">BOOKING CONFIRMED</p>
+        <h1 className="font-serif text-4xl sm:text-5xl font-light text-white tracking-wide">
+          Your Antique Trunk is Being Prepared
+        </h1>
+        <div className="w-12 h-[1px] bg-[#d4af37] mx-auto" />
+        <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed tracking-wider max-w-md mx-auto">
+          Our white-glove style concierge will hand-deliver your curated trunk to {address} for your private 1-hour trial during: <br />
+          <span className="text-white font-medium">{slot}</span>.
+        </p>
+        <p className="text-[11px] text-zinc-500 uppercase tracking-widest">
+          Trial Security Deposit: ₹199 (Adjusted upon purchase)
+        </p>
+        <div className="pt-6">
+          <Link
+            href="/"
+            className="inline-block border border-white/30 px-8 py-3.5 text-[10px] uppercase tracking-[0.25em] text-white hover:border-[#d4af37] hover:text-[#d4af37] transition-all"
+          >
+            Return to Atelier
+          </Link>
+        </div>
       </div>
     )
   }
 
-  if (done) {
-    return (
-      <Screen eyebrow="Trunk dispatched" title="You're all set">
-        <div className="grid place-items-center gap-4 rounded-2xl border border-border bg-card p-8 text-center">
-          <CheckCircle2 className="size-12 text-success" />
-          <p className="text-sm text-muted-foreground">
-            Your order is saved and the dispatch team has your details on
-            WhatsApp. Keep your {formatINR(TRIAL_DEPOSIT)} receipt handy — it is
-            fully refundable.
-          </p>
-          <Link
-            href="/browse"
-            className="rounded-full bg-gold-gradient px-6 py-2.5 text-sm font-medium text-primary-foreground shadow-gold"
-          >
-            Continue browsing
-          </Link>
-        </div>
-      </Screen>
-    )
-  }
-
-  if (items.length === 0) {
-    return (
-      <Screen eyebrow="Your trunk" title="Nothing packed yet">
-        <div className="grid place-items-center gap-4 rounded-2xl border border-dashed border-border p-10 text-center">
-          <Briefcase className="size-10 text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">
-            Add up to {TRUNK_CAP} outfits to try at home. You only pay a
-            refundable {formatINR(TRIAL_DEPOSIT)} deposit to book your slot.
-          </p>
-          <Link
-            href="/browse"
-            className="rounded-full bg-gold-gradient px-6 py-2.5 text-sm font-medium text-primary-foreground shadow-gold"
-          >
-            Browse collection
-          </Link>
-        </div>
-      </Screen>
-    )
-  }
-
   return (
-    <Screen
-      eyebrow="Doorstep trial"
-      title="Your trunk"
-      subtitle={`${items.length} of ${TRUNK_CAP} outfits · ${formatINR(garmentValue)} garment value`}
-    >
-      <ul className="space-y-3">
-        {items.map(({ item, product }) => (
-          <li
-            key={item.productId}
-            className="flex gap-3 rounded-xl border border-border bg-card p-3"
-          >
-            <div className="fabric-sheen size-20 shrink-0 rounded-lg bg-surface-raised p-2">
-              <GarmentSwatch product={product!} className="h-full w-full" />
-            </div>
-            <div className="flex flex-1 flex-col">
-              <p className="text-[0.7rem] uppercase tracking-wide text-muted-foreground">
-                {product!.brand}
-              </p>
-              <p className="line-clamp-1 text-sm">{product!.name}</p>
-              <p className="text-xs text-muted-foreground">Size {item.size}</p>
-              <div className="mt-auto flex items-center justify-between">
-                <span className="text-sm font-semibold">
-                  {formatINR(product!.price)}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => removeFromTrunk(item.productId)}
-                  aria-label="Remove from trunk"
-                  className="inline-flex items-center gap-1 text-xs text-destructive"
-                >
-                  <Trash2 className="size-3.5" />
-                  Remove
-                </button>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
-
-      <div className="mt-6 space-y-4 rounded-2xl border border-border bg-card p-4">
-        <p className="inline-flex items-center gap-2 text-sm font-medium">
-          <MapPin className="size-4 text-gold" />
-          Delivery details
+    <div className="mx-auto max-w-7xl px-6 sm:px-12 py-16 space-y-16">
+      {/* Header */}
+      <div className="text-center max-w-2xl mx-auto space-y-3">
+        <p className="text-[10px] uppercase tracking-[0.4em] text-[#d4af37]">THE PRIVATE FITTING ROOM</p>
+        <h1 className="font-serif text-4xl sm:text-5xl font-light tracking-wide text-white">
+          Your Curated Doorstep Trunk
+        </h1>
+        <p className="text-xs text-zinc-400 font-light tracking-wider">
+          Select up to 4 heirloom garments to experience at home before purchasing.
         </p>
+      </div>
 
-        <Field label="Full name">
-          <input
-            value={form.name}
-            onChange={(e) => set('name', e.target.value)}
-            placeholder="e.g. Meera Nair"
-            className={inputCls}
-          />
-        </Field>
-
-        <Field label="Phone number">
-          <input
-            inputMode="numeric"
-            maxLength={10}
-            value={form.phone}
-            onChange={(e) => set('phone', e.target.value.replace(/\D/g, ''))}
-            placeholder="10-digit mobile"
-            className={inputCls}
-          />
-        </Field>
-
-        <Field label="Complete street address">
-          <textarea
-            value={form.address}
-            onChange={(e) => set('address', e.target.value)}
-            placeholder="Flat / house no., street, area, city"
-            rows={3}
-            className={cn(inputCls, 'resize-none')}
-          />
-        </Field>
-
-        <Field label="Pincode">
-          <input
-            inputMode="numeric"
-            maxLength={6}
-            value={form.pincode}
-            onChange={(e) => set('pincode', e.target.value.replace(/\D/g, ''))}
-            placeholder="6-digit pincode"
-            className={inputCls}
-          />
-        </Field>
-
-        <div>
-          <p className="eyebrow mb-2 inline-flex items-center gap-1.5">
-            <CalendarClock className="size-3.5" />
-            Preferred 1-hour trial slot
+      {trunkItems.length === 0 ? (
+        <div className="text-center py-20 border border-white/[0.08] bg-white/[0.02] space-y-6">
+          <p className="font-serif text-2xl text-zinc-400 font-light">Your trunk is currently empty.</p>
+          <p className="text-xs uppercase tracking-[0.2em] text-zinc-500 max-w-xs mx-auto">
+            Explore our collections and add up to 4 pieces for private doorstep fitting.
           </p>
-          <div className="grid grid-cols-2 gap-2">
-            {SLOTS.map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => set('slot', s)}
-                className={cn(
-                  'rounded-lg border px-3 py-2 text-xs transition-colors',
-                  form.slot === s
-                    ? 'border-gold bg-gold/10 text-gold'
-                    : 'border-border text-muted-foreground hover:text-foreground',
-                )}
-              >
-                {s}
-              </button>
-            ))}
+          <div>
+            <Link
+              href="/#wardrobe"
+              className="inline-block border border-[#d4af37] bg-[#d4af37] px-8 py-3 text-[10px] uppercase tracking-[0.25em] font-semibold text-black hover:bg-transparent hover:text-[#d4af37] transition-all"
+            >
+              Browse Collections
+            </Link>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          {/* Left: Garment List */}
+          <div className="lg:col-span-7 space-y-6">
+            <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 text-xs uppercase tracking-widest text-zinc-400">
+              <span>Trunk Curation ({trunkItems.length} / 4 Outfits)</span>
+              <button
+                type="button"
+                onClick={clearTrunk}
+                className="text-zinc-500 hover:text-white transition-colors"
+              >
+                Clear All
+              </button>
+            </div>
 
-      <div className="mt-5 rounded-2xl border border-gold/30 bg-gold/5 p-4">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">Refundable trial deposit</span>
-          <span className="font-semibold">{formatINR(TRIAL_DEPOSIT)}</span>
+            <div className="space-y-4">
+              {trunkItems.map(({ product, size }) => (
+                <div
+                  key={product.id}
+                  className="flex gap-6 border border-white/[0.08] bg-white/[0.02] p-4 items-center justify-between"
+                >
+                  <div className="flex gap-4 items-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={(product as any).imageUrl}
+                      alt={product.name}
+                      className="size-20 object-cover border border-white/[0.08]"
+                    />
+                    <div className="space-y-1 text-left">
+                      <p className="text-[9px] uppercase tracking-[0.2em] text-[#d4af37]">
+                        {product.brand} · {product.gender}
+                      </p>
+                      <h3 className="font-serif text-base text-white font-normal">{product.name}</h3>
+                      <p className="text-xs text-zinc-400 font-light">Size: {size}</p>
+                      <p className="text-xs text-white">{formatINR(product.price)}</p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => removeFromTrunk(product.id)}
+                    className="text-xs uppercase tracking-wider text-zinc-500 hover:text-red-400 transition-colors px-3 py-1"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: Booking Form */}
+          <div className="lg:col-span-5 border border-white/[0.08] bg-white/[0.02] p-8 space-y-6">
+            <h2 className="font-serif text-2xl text-white font-light tracking-wide">
+              Doorstep Trial Reservation
+            </h2>
+
+            <div className="space-y-3 text-xs tracking-wider border-b border-white/[0.08] pb-6">
+              <div className="flex justify-between text-zinc-400">
+                <span>Selected Garments Value</span>
+                <span className="text-white">{formatINR(totalValue)}</span>
+              </div>
+              <div className="flex justify-between text-zinc-400">
+                <span>Doorstep White-Glove Fitting</span>
+                <span className="text-emerald-400 uppercase text-[10px]">Complimentary</span>
+              </div>
+              <div className="flex justify-between text-zinc-400">
+                <span>Private Trial Security Deposit</span>
+                <span className="text-[#d4af37] font-semibold">{formatINR(deposit)}</span>
+              </div>
+              <p className="text-[10px] text-zinc-500 leading-relaxed pt-2">
+                *The ₹199 trial deposit covers hand-delivery and is 100% adjusted towards any piece you decide to keep.
+              </p>
+            </div>
+
+            <form onSubmit={handleBookTrial} className="space-y-4">
+              <div className="space-y-2">
+                <label className="block text-[10px] uppercase tracking-[0.25em] text-zinc-400">
+                  Bengaluru Residence Address
+                </label>
+                <textarea
+                  required
+                  rows={3}
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Apartment, Villa / Street, Locality"
+                  className="w-full border border-white/[0.12] bg-[#0a0d12] p-3 text-xs text-white placeholder:text-zinc-600 outline-none focus:border-[#d4af37]"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-[10px] uppercase tracking-[0.25em] text-zinc-400">
+                  Preferred 1-Hour Fitting Window
+                </label>
+                <select
+                  value={slot}
+                  onChange={(e) => setSlot(e.target.value)}
+                  className="w-full border border-white/[0.12] bg-[#0a0d12] p-3 text-xs text-white outline-none focus:border-[#d4af37]"
+                >
+                  <option value="Tomorrow, 11:00 AM - 12:00 PM">Tomorrow, 11:00 AM - 12:00 PM</option>
+                  <option value="Tomorrow, 03:00 PM - 04:00 PM">Tomorrow, 03:00 PM - 04:00 PM</option>
+                  <option value="Tomorrow, 06:00 PM - 07:00 PM">Tomorrow, 06:00 PM - 07:00 PM</option>
+                  <option value="Day After, 11:00 AM - 12:00 PM">Day After, 11:00 AM - 12:00 PM</option>
+                </select>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-[#d4af37] py-4 text-[10px] uppercase tracking-[0.25em] font-semibold text-black hover:bg-white transition-all mt-4"
+              >
+                Reserve Doorstep Trunk (₹199)
+              </button>
+            </form>
+          </div>
         </div>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Pay only the deposit now. Settle for the pieces you keep after your
-          trial; the deposit is refunded.
-        </p>
-      </div>
-
-      <button
-        type="button"
-        onClick={proceed}
-        className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold-gradient py-3.5 text-sm font-semibold text-primary-foreground shadow-gold"
-      >
-        Pay {formatINR(TRIAL_DEPOSIT)} deposit &amp; book trial
-      </button>
-
-      {showPayment && (
-        <PaymentModal
-          details={form}
-          items={trunk}
-          onClose={() => setShowPayment(false)}
-          onConfirmed={() => {
-            setShowPayment(false)
-            setDone(true)
-          }}
-        />
       )}
-    </Screen>
-  )
-}
-
-const inputCls =
-  'w-full rounded-lg border border-input bg-surface-raised px-4 py-2.5 text-sm outline-none placeholder:text-muted-foreground focus:border-primary/50'
-
-function Field({
-  label,
-  children,
-}: {
-  label: string
-  children: React.ReactNode
-}) {
-  return (
-    <label className="block">
-      <span className="eyebrow mb-1.5 block">{label}</span>
-      {children}
-    </label>
+    </div>
   )
 }
