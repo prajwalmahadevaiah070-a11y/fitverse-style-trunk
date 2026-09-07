@@ -3,9 +3,8 @@ import Link from 'next/link'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Petikara · Haute Couture Doorstep Maison',
-  description:
-    'Private doorstep trials for heirloom Indian couture. Banarasi silks, royal bandhgalas, and hypoallergenic junior festive wear.',
+  title: 'PETIKARA | Indian Haute Couture & Doorstep Trunk Atelier',
+  description: 'Handcrafted luxury Indian couture. Private 1-hour doorstep home trials across Bengaluru.',
 }
 
 export default function RootLayout({
@@ -15,57 +14,35 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="min-h-screen bg-[#0a0d12] text-[#f5f5f5] antialiased selection:bg-[#d4af37]/30 selection:text-[#d4af37]">
-        {/* TOP EDITORIAL ANNOUNCEMENT */}
-        <div className="w-full border-b border-white/[0.06] bg-black/40 py-2 text-center text-[9px] uppercase tracking-[0.35em] text-[#d4af37]">
-          Private Doorstep Trial Maison · Bengaluru
+      <body className="min-h-screen bg-black text-white antialiased">
+        {/* Top Minimal Dispatch Strip */}
+        <div className="w-full bg-[#0d0d0d] py-2 text-center text-[9px] uppercase tracking-[0.35em] text-zinc-400 border-b border-white/[0.05]">
+          Complimentary Doorstep Home Trial Atelier · Bengaluru
         </div>
 
-        {/* CENTERED LUXURY MASTHEAD NAVIGATION */}
-        <header className="sticky top-0 z-50 w-full border-b border-white/[0.08] bg-[#0a0d12]/95 backdrop-blur-md">
-          <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-6 sm:px-12">
-            {/* Left Symmetrical Navigation */}
-            <nav className="flex items-center gap-8 text-[10px] font-medium uppercase tracking-[0.25em] text-zinc-400">
-              <Link href="/#wardrobe" className="hover:text-white transition-colors">
-                Collections
-              </Link>
-              <Link href="/studio" className="hover:text-white transition-colors">
-                Atelier Studio
-              </Link>
-            </nav>
-
-            {/* Centered Brand Masthead */}
+        {/* The Centered Maison Header */}
+        <header className="sticky top-0 z-50 w-full bg-black/90 backdrop-blur-md border-b border-white/[0.08]">
+          <div className="mx-auto flex flex-col items-center justify-center pt-5 pb-3 px-6">
+            {/* Centered Brand Title */}
             <Link
               href="/"
-              className="font-serif text-3xl sm:text-4xl tracking-[0.35em] text-white uppercase hover:text-[#d4af37] transition-colors"
+              className="font-serif text-3xl sm:text-4xl lg:text-5xl font-light tracking-[0.35em] uppercase text-white hover:text-zinc-300 transition-colors"
             >
-              Petikara
+              PETIKARA
             </Link>
 
-            {/* Right Symmetrical Navigation */}
-            <nav className="flex items-center gap-8 text-[10px] font-medium uppercase tracking-[0.25em] text-zinc-400">
-              <Link href="/#ritual" className="hover:text-white transition-colors">
-                The Ritual
-              </Link>
-              <Link
-                href="/trunk"
-                className="border border-[#d4af37]/60 bg-[#d4af37]/10 px-5 py-2 text-[#d4af37] hover:bg-[#d4af37] hover:text-black transition-all"
-              >
-                Trunk (4)
-              </Link>
+            {/* Sub-Navigation Categories */}
+            <nav className="flex items-center gap-8 sm:gap-12 mt-4 text-[10px] uppercase tracking-[0.25em] text-zinc-400 font-light">
+              <Link href="/#women" className="hover:text-white transition-colors">Women</Link>
+              <Link href="/#men" className="hover:text-white transition-colors">Men</Link>
+              <Link href="/#kids" className="hover:text-white transition-colors">Junior Atelier</Link>
+              <Link href="/studio" className="hover:text-white transition-colors">Digital Atelier</Link>
+              <Link href="/trunk" className="text-white hover:text-zinc-300 transition-colors">Doorstep Trunk</Link>
             </nav>
           </div>
         </header>
 
-        {/* MAIN BODY CONTENT */}
+        {/* Content Container */}
         <main className="w-full">
           {children}
         </main>
