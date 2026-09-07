@@ -1,166 +1,73 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
-
-@custom-variant dark (&:is(.dark *));
-
-/*
- * FitVerse design system — luxury dark slate / stone white / champagne gold.
- * All colors in oklch. Add new tokens to :root then register in @theme inline.
- */
-
-@theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-gold: var(--gold);
-  --color-gold-soft: var(--gold-soft);
-  --color-gold-foreground: var(--gold-foreground);
-  --color-stone: var(--stone);
-  --color-slate-deep: var(--slate-deep);
-  --color-surface: var(--surface);
-  --color-surface-raised: var(--surface-raised);
-  --color-success: var(--success);
-  --font-display: var(--font-cormorant), Georgia, serif;
-  --font-sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
-}
-
-:root {
-  --radius: 0.5rem;
-
-  --slate-deep: oklch(0.17 0.017 255);
-  --surface: oklch(0.222 0.018 256);
-  --surface-raised: oklch(0.268 0.019 256);
-  --stone: oklch(0.965 0.004 90);
-  --gold: oklch(0.82 0.088 84);
-  --gold-soft: oklch(0.9 0.05 88);
-  --gold-foreground: oklch(0.19 0.02 255);
-
-  --background: var(--slate-deep);
-  --foreground: var(--stone);
-  --card: var(--surface);
-  --card-foreground: var(--stone);
-  --popover: var(--surface-raised);
-  --popover-foreground: var(--stone);
-  --primary: var(--gold);
-  --primary-foreground: var(--gold-foreground);
-  --secondary: var(--surface-raised);
-  --secondary-foreground: var(--stone);
-  --muted: oklch(0.29 0.017 256);
-  --muted-foreground: oklch(0.72 0.014 256);
-  --accent: oklch(0.32 0.02 256);
-  --accent-foreground: var(--stone);
-  --destructive: oklch(0.62 0.19 22);
-  --destructive-foreground: oklch(0.98 0.003 90);
-  --success: oklch(0.72 0.13 158);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 16%);
-  --ring: var(--gold);
-
-  --gradient-gold: linear-gradient(115deg, oklch(0.9 0.05 88), oklch(0.78 0.1 78));
-  --gradient-veil: linear-gradient(180deg, oklch(0.17 0.017 255 / 0%), oklch(0.17 0.017 255 / 92%));
-  --shadow-luxe: 0 22px 60px -28px oklch(0 0 0 / 75%);
-  --shadow-gold: 0 14px 40px -18px oklch(0.82 0.088 84 / 45%);
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
-  * {
-    border-color: var(--color-border);
-  }
+  :root {
+    --background: 220 18% 7%;
+    --foreground: 45 20% 96%;
 
-  html {
-    -webkit-tap-highlight-color: transparent;
-  }
+    --card: 220 18% 10%;
+    --card-foreground: 45 20% 96%;
 
-  body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    font-family: var(--font-sans);
-    letter-spacing: 0.01em;
-    overscroll-behavior-y: none;
-  }
+    --popover: 220 18% 10%;
+    --popover-foreground: 45 20% 96%;
 
-  h1,
-  h2,
-  h3 {
-    font-family: var(--font-display);
-    letter-spacing: 0.005em;
-  }
+    --primary: 43 65% 58%;
+    --primary-foreground: 220 18% 7%;
 
-  ::-webkit-scrollbar {
-    width: 0;
-    height: 0;
+    --secondary: 220 14% 15%;
+    --secondary-foreground: 45 20% 96%;
+
+    --muted: 220 14% 18%;
+    --muted-foreground: 215 15% 65%;
+
+    --accent: 43 65% 58%;
+    --accent-foreground: 220 18% 7%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 45 20% 96%;
+
+    --border: 220 14% 18%;
+    --input: 220 14% 18%;
+    --ring: 43 65% 58%;
+
+    --gold: #d4af37;
+    --gold-light: #f3e5ab;
+    --gold-dark: #aa820a;
   }
 }
 
-@utility text-gold-gradient {
-  background: var(--gradient-gold);
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-jost), sans-serif;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, .font-serif {
+  font-family: var(--font-cormorant), serif;
+}
+
+/* Custom Luxury Gradients & Shimmers */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #f7e7b4 0%, #d4af37 50%, #aa820a 100%);
   -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 
-@utility bg-gold-gradient {
-  background: var(--gradient-gold);
+.bg-gold-gradient {
+  background: linear-gradient(135deg, #e8d082 0%, #d4af37 60%, #b89324 100%);
 }
 
-@utility bg-gradient-veil {
-  background: var(--gradient-veil);
+.shadow-gold {
+  box-shadow: 0 10px 30px -10px rgba(212, 175, 55, 0.35);
 }
 
-@utility shadow-luxe {
-  box-shadow: var(--shadow-luxe);
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
-
-@utility shadow-gold {
-  box-shadow: var(--shadow-gold);
-}
-
-@utility eyebrow {
-  font-size: 0.6875rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--color-muted-foreground);
-}
-
-@utility hide-scrollbar {
-  scrollbar-width: none;
+.hide-scrollbar {
   -ms-overflow-style: none;
-}
-
-@utility fabric-sheen {
-  position: relative;
-  overflow: hidden;
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      120deg,
-      oklch(1 0 0 / 0%) 30%,
-      oklch(1 0 0 / 14%) 48%,
-      oklch(1 0 0 / 0%) 66%
-    );
-  }
+  scrollbar-width: none;
 }
