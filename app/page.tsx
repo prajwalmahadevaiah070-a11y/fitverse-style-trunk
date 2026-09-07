@@ -41,7 +41,7 @@ export default function HomePage() {
     <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 md:pb-12">
       <section className="relative overflow-hidden pt-8 md:pt-14">
         <div className="pointer-events-none absolute -right-16 -top-10 h-72 w-72 rounded-full bg-gold/15 blur-3xl" />
-        <p className="eyebrow">FitVerse · Handwoven India, home-tried</p>
+        <p className="eyebrow">Petikara · Handwoven India, home-tried</p>
         <h1 className="mt-3 text-4xl md:text-6xl font-semibold leading-[1.08] max-w-3xl">
           Try the finest{' '}
           <span className="text-gold-gradient">Indian couture</span> at your
