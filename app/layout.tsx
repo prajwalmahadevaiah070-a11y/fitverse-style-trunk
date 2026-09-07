@@ -3,9 +3,9 @@ import Link from 'next/link'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Petikara · Luxury Indian Couture & Doorstep Home Trials',
+  title: 'Petikara · Haute Couture Doorstep Maison',
   description:
-    'Experience curated Banarasi, Kanchipuram, Velvet Bandhgalas, and Kids festive couture delivered to your doorstep for a 1-hour private fitting.',
+    'Private doorstep trials for heirloom Indian couture. Banarasi silks, royal bandhgalas, and hypoallergenic junior festive wear.',
 }
 
 export default function RootLayout({
@@ -19,39 +19,47 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen bg-[#0b0f14] text-[#f5f5f5] antialiased">
-        {/* HAUTE COUTURE TOP NAVIGATION */}
-        <header className="sticky top-0 z-50 w-full border-b border-[#222a35] bg-[#0b0f14]/90 backdrop-blur-md">
-          <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 sm:px-8">
+      <body className="min-h-screen bg-[#0a0d12] text-[#f5f5f5] antialiased selection:bg-[#d4af37]/30 selection:text-[#d4af37]">
+        {/* TOP EDITORIAL ANNOUNCEMENT */}
+        <div className="w-full border-b border-white/[0.06] bg-black/40 py-2 text-center text-[9px] uppercase tracking-[0.35em] text-[#d4af37]">
+          Private Doorstep Trial Maison · Bengaluru
+        </div>
+
+        {/* CENTERED LUXURY MASTHEAD NAVIGATION */}
+        <header className="sticky top-0 z-50 w-full border-b border-white/[0.08] bg-[#0a0d12]/95 backdrop-blur-md">
+          <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-6 sm:px-12">
+            {/* Left Symmetrical Navigation */}
+            <nav className="flex items-center gap-8 text-[10px] font-medium uppercase tracking-[0.25em] text-zinc-400">
+              <Link href="/#wardrobe" className="hover:text-white transition-colors">
+                Collections
+              </Link>
+              <Link href="/studio" className="hover:text-white transition-colors">
+                Atelier Studio
+              </Link>
+            </nav>
+
+            {/* Centered Brand Masthead */}
             <Link
               href="/"
-              className="text-2xl sm:text-3xl font-bold tracking-[0.25em] text-[#d4af37] uppercase font-serif"
+              className="font-serif text-3xl sm:text-4xl tracking-[0.35em] text-white uppercase hover:text-[#d4af37] transition-colors"
             >
               Petikara
             </Link>
 
-            <nav className="flex items-center gap-6 sm:gap-8 text-[11px] font-semibold uppercase tracking-[0.18em]">
-              <Link
-                href="/"
-                className="text-gray-300 hover:text-[#d4af37] transition-colors"
-              >
-                Home
-              </Link>
-              <Link
-                href="/studio"
-                className="text-gray-300 hover:text-[#d4af37] transition-colors"
-              >
-                Try-On Studio
+            {/* Right Symmetrical Navigation */}
+            <nav className="flex items-center gap-8 text-[10px] font-medium uppercase tracking-[0.25em] text-zinc-400">
+              <Link href="/#ritual" className="hover:text-white transition-colors">
+                The Ritual
               </Link>
               <Link
                 href="/trunk"
-                className="rounded-full border border-[#d4af37] bg-[#d4af37]/10 px-5 py-2 text-[#d4af37] hover:bg-[#d4af37] hover:text-black transition-all"
+                className="border border-[#d4af37]/60 bg-[#d4af37]/10 px-5 py-2 text-[#d4af37] hover:bg-[#d4af37] hover:text-black transition-all"
               >
-                Doorstep Trunk
+                Trunk (4)
               </Link>
             </nav>
           </div>
