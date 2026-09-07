@@ -104,19 +104,19 @@ export const TRUNK_CAP = 4
 export const TRIAL_DEPOSIT = 199
 export const PLATFORM_COMMISSION = 0.15
 
-/** Kotak Mahindra Bank collection details for the refundable trial deposit. */
+/** Payment and collection details for the refundable trial deposit. */
 export const PAYMENT = {
   bank: 'Kotak Mahindra Bank',
   account: '8046804439',
   ifsc: 'KKBK0008043',
-  payee: 'FitVerse',
-  vpa: '8046804439@KKBK0008043.ifsc.npci',
+  payee: 'Petikara',
+  vpa: '8310961823@ybl',
   amount: TRIAL_DEPOSIT,
-  note: 'FitVerseTrialDeposit',
+  note: 'PetikaraTrialDeposit',
 }
 
 export const upiUri = () =>
-  `upi://pay?pa=${PAYMENT.vpa}&pn=${PAYMENT.payee}&am=${PAYMENT.amount}&cu=INR&tn=${PAYMENT.note}`
+  `upi://pay?pa=${PAYMENT.vpa}&pn=${encodeURIComponent(PAYMENT.payee)}&am=${PAYMENT.amount}&cu=INR&tn=${PAYMENT.note}`
 
 export const WHATSAPP_DISPATCH = '918310961823'
 
