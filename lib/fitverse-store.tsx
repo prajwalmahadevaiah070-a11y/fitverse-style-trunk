@@ -1,7 +1,6 @@
 'use client'
 
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { useState, useEffect, useCallback } from 'react'
 import type { Product, TrunkItem, StudioPhoto, Order, OrderStatus } from './fitverse-types'
 
 export const LUXURY_COUTURE_CATALOG: (Product & {
@@ -271,89 +270,142 @@ export const LUXURY_COUTURE_CATALOG: (Product & {
   },
 ]
 
-interface FitVerseState {
+// Zero-dependency storage listener
+const STORAGE_KEY = 'petikara_app_state'
+
+type GlobalState = {
   products: Product[]
   trunk: TrunkItem[]
   photos: StudioPhoto[]
   orders: Order[]
-  addToTrunk: (productId: string, size: string) => void
-  removeFromTrunk: (productId: string) => void
-  clearTrunk: () => void
-  productById: (id: string) => Product | undefined
-  addPhoto: (photo: { label: string; dataUrl: string }) => void
-  removePhoto: (id: string) => void
-  placeOrder: (order: Omit<Order, 'id' | 'createdAt' | 'status' | 'deposit'>) => Order
-  updateOrderStatus: (id: string, status: OrderStatus) => void
-  addProduct: (product: Omit<Product, 'id'>) => void
 }
 
-export const useFitVerse = create<FitVerseState>()(
-  persist(
-    (set, get) => ({
-      products: LUXURY_COUTURE_CATALOG as Product[],
-      trunk: [],
-      photos: [],
-      orders: [],
+const initialGlobalState: GlobalState = {
+  products: LUXURY_COUTURE_CATALOG as Product[],
+  trunk: [],
+  photos: [],
+  orders: [],
+}
 
-      addToTrunk: (productId, size) => {
-        const { trunk } = get()
-        if (trunk.some((i) => i.productId === productId)) return
-        if (trunk.length >= 4) return
-        set({ trunk: [...trunk, { productId, size, addedAt: Date.now() }] })
-      },
+let memoryState: GlobalState = { ...initialGlobalState }
+const listeners = new Set<() => void>()
 
-      removeFromTrunk: (productId) => {
-        set({ trunk: get().trunk.filter((i) => i.productId !== productId) })
-      },
-
-      clearTrunk: () => set({ trunk: [] }),
-
-      productById: (id) => get().products.find((p) => p.id === id),
-
-      addPhoto: ({ label, dataUrl }) => {
-        set({
-          photos: [
-            { id: 'photo_' + Date.now(), label, dataUrl, createdAt: Date.now() },
-            ...get().photos,
-          ],
-        })
-      },
-
-      removePhoto: (id) => {
-        set({ photos: get().photos.filter((p) => p.id !== id) })
-      },
-
-      placeOrder: (data) => {
-        const order: Order = {
-          ...data,
-          id: 'PK-' + Math.floor(100000 + Math.random() * 900000),
-          deposit: 199,
-          status: 'Pending',
-          createdAt: Date.now(),
-        }
-        set({ orders: [order, ...get().orders] })
-        return order
-      },
-
-      updateOrderStatus: (id, status) => {
-        set({
-          orders: get().orders.map((o) => (o.id === id ? { ...o, status } : o)),
-        })
-      },
-
-      addProduct: (p) => {
-        const newProduct: Product = {
-          ...p,
-          id: 'pk-custom-' + Date.now(),
-        }
-        set({ products: [newProduct, ...get().products] })
-      },
-    }),
-    {
-      name: 'petikara-storage',
+function broadcast() {
+  if (typeof window !== 'undefined') {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(memoryState))
+    } catch {
+      // ignore quota error
     }
-  )
-)
+  }
+  listeners.forEach((l) => l())
+}
+
+// Hydrate on initial script load if in browser
+if (typeof window !== 'undefined') {
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY)
+    if (raw) {
+      const parsed = JSON.parse(raw)
+      memoryState = {
+        ...initialGlobalState,
+        ...parsed,
+        products: (parsed.products && parsed.products.length > 0) ? parsed.products : LUXURY_COUTURE_CATALOG,
+      }
+    }
+  } catch {
+    // ignore parse error
+  }
+}
+
+export function useFitVerse() {
+  const [, setTick] = useState(0)
+
+  useEffect(() => {
+    const update = () => setTick((t) => t + 1)
+    listeners.add(update)
+    return () => {
+      listeners.delete(update)
+    }
+  }, [])
+
+  const addToTrunk = useCallback((productId: string, size: string) => {
+    if (memoryState.trunk.some((i) => i.productId === productId)) return
+    if (memoryState.trunk.length >= 4) return
+    memoryState.trunk = [...memoryState.trunk, { productId, size, addedAt: Date.now() }]
+    broadcast()
+  }, [])
+
+  const removeFromTrunk = useCallback((productId: string) => {
+    memoryState.trunk = memoryState.trunk.filter((i) => i.productId !== productId)
+    broadcast()
+  }, [])
+
+  const clearTrunk = useCallback(() => {
+    memoryState.trunk = []
+    broadcast()
+  }, [])
+
+  const productById = useCallback((id: string) => {
+    return memoryState.products.find((p) => p.id === id)
+  }, [])
+
+  const addPhoto = useCallback(({ label, dataUrl }: { label: string; dataUrl: string }) => {
+    memoryState.photos = [
+      { id: 'photo_' + Date.now(), label, dataUrl, createdAt: Date.now() },
+      ...memoryState.photos,
+    ]
+    broadcast()
+  }, [])
+
+  const removePhoto = useCallback((id: string) => {
+    memoryState.photos = memoryState.photos.filter((p) => p.id !== id)
+    broadcast()
+  }, [])
+
+  const placeOrder = useCallback((data: Omit<Order, 'id' | 'createdAt' | 'status' | 'deposit'>) => {
+    const order: Order = {
+      ...data,
+      id: 'PK-' + Math.floor(100000 + Math.random() * 900000),
+      deposit: 199,
+      status: 'Pending',
+      createdAt: Date.now(),
+    }
+    memoryState.orders = [order, ...memoryState.orders]
+    broadcast()
+    return order
+  }, [])
+
+  const updateOrderStatus = useCallback((id: string, status: OrderStatus) => {
+    memoryState.orders = memoryState.orders.map((o) => (o.id === id ? { ...o, status } : o))
+    broadcast()
+  }, [])
+
+  const addProduct = useCallback((p: Omit<Product, 'id'>) => {
+    const newProduct: Product = {
+      ...p,
+      id: 'pk-custom-' + Date.now(),
+    }
+    memoryState.products = [newProduct, ...memoryState.products]
+    broadcast()
+  }, [])
+
+  return {
+    products: memoryState.products,
+    trunk: memoryState.trunk,
+    photos: memoryState.photos,
+    orders: memoryState.orders,
+    addToTrunk,
+    removeFromTrunk,
+    clearTrunk,
+    productById,
+    addPhoto,
+    removePhoto,
+    placeOrder,
+    updateOrderStatus,
+    addProduct,
+  }
+}
 
 export function useAdminMetrics() {
   const { orders, products } = useFitVerse()
