@@ -11,7 +11,6 @@ import {
   CheckCircle2,
   ChevronRight,
   Smile,
-  ShieldCheck
 } from 'lucide-react'
 import { useFitVerse } from '@/lib/fitverse-store'
 import { formatINR } from '@/lib/fitverse-types'
@@ -19,22 +18,28 @@ import { toast } from 'sonner'
 
 const HERO_SLIDES = [
   {
-    title: 'Redefining How Indian Couture Is Experienced.',
-    subtitle: 'From pure Banarasi silks to royal velvet bandhgalas — style them in 3D, then try 4 heirloom pieces at home before paying.',
-    tag: 'Petikara Doorstep Atelier',
-    image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1800&q=80',
+    title: 'Heirloom Handlooms, Doorstep Fitting.',
+    subtitle:
+      'From pure Banarasi Kadhwa weaves to imperial velvet bandhgalas — styled virtually, delivered in an antique wooden trunk for a private 1-hour home trial.',
+    tag: 'Petikara Couture · Autumn / Festive 2026',
+    image:
+      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1920&q=85',
   },
   {
-    title: 'Royal Tailoring For Men & Little Princes.',
-    subtitle: 'Zero crowded fitting rooms. Impeccable bespoke achkans and kids pure silk sets delivered for a private 1-hour home trial.',
-    tag: 'Men & Heirs Collection',
-    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1800&q=80',
+    title: 'The Royal Wardrobe for Men & Heirs.',
+    subtitle:
+      'No crowded changing rooms. Impeccably tailored achkans, bundis, and boys’ brocade sets brought right to your living room.',
+    tag: 'Men & Heirs · Bespoke Cut',
+    image:
+      'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1920&q=85',
   },
   {
-    title: 'The No-Meltdown Festive Fitting For Kids.',
-    subtitle: '100% mulmul hypoallergenic linings. Let your children try 4 festive sets at home with zero rush.',
-    tag: 'Junior Festive Atelier',
-    image: 'https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?auto=format&fit=crop&w=1800&q=80',
+    title: 'Zero-Fuss Festive Dressing for Children.',
+    subtitle:
+      'Hypoallergenic 100% mulmul linings with zero itch. Let your little ones try 4 pieces at home at their own pace.',
+    tag: 'Nanhe Threads · Junior Atelier',
+    image:
+      'https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?auto=format&fit=crop&w=1920&q=85',
   },
 ]
 
@@ -46,20 +51,19 @@ export default function HomePage() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length)
-    }, 6000)
+    }, 6500)
     return () => clearInterval(timer)
   }, [])
 
-  const filteredProducts = products.filter((p) => {
+  const filteredProducts = (products || []).filter((p) => {
     if (activeTab === 'all') return true
     return p.gender === activeTab
   })
 
   return (
-    <div className="space-y-16 sm:space-y-24 -mt-6">
-
-      {/* 1. FULL BLEED EDITORIAL HERO (MATCHING REFERENCE AESTHETIC) */}
-      <section className="relative -mx-4 sm:-mx-6 lg:-mx-8 h-[82vh] min-h-[550px] overflow-hidden rounded-b-3xl border-b border-border/70 shadow-sm bg-[#1c1815]">
+    <div className="space-y-20 -mt-6">
+      {/* 1. FULL-BLEED LIVING EDITORIAL HERO */}
+      <section className="relative -mx-4 sm:-mx-6 lg:-mx-8 h-[88vh] min-h-[580px] overflow-hidden border-b border-border/60">
         {HERO_SLIDES.map((slide, index) => (
           <div
             key={slide.title}
@@ -71,50 +75,51 @@ export default function HomePage() {
             <img
               src={slide.image}
               alt={slide.title}
-              className="h-full w-full object-cover object-center"
+              className="h-full w-full object-cover object-center scale-105 transition-transform duration-[8000ms] ease-out"
+              style={{
+                transform: index === currentSlide ? 'scale(1)' : 'scale(1.08)',
+              }}
             />
-            {/* Warm Luxury Filter Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-black/40" />
+            <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/40 to-transparent" />
           </div>
         ))}
 
-        {/* Hero Copy */}
-        <div className="relative z-20 mx-auto flex h-full max-w-7xl flex-col justify-end px-6 pb-16 sm:px-10">
-          <div className="max-w-2xl space-y-4">
-            <div className="inline-flex items-center gap-2 rounded-full border border-gold-light/40 bg-black/40 px-3.5 py-1 backdrop-blur-md">
-              <Sparkles className="size-3.5 text-gold-light" />
+        <div className="relative z-20 mx-auto flex h-full max-w-7xl flex-col justify-end px-6 pb-16 pt-20 sm:px-8">
+          <div className="max-w-2xl space-y-5">
+            <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-black/40 px-3.5 py-1 backdrop-blur-md">
+              <Sparkles className="size-3.5 text-gold animate-pulse" />
               <span className="text-[11px] font-medium uppercase tracking-widest text-gold-light">
                 {HERO_SLIDES[currentSlide].tag}
               </span>
             </div>
 
-            <h1 className="font-serif text-4xl sm:text-6xl font-semibold leading-[1.08] text-white">
+            <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-semibold leading-[1.08] text-white">
               {HERO_SLIDES[currentSlide].title}
             </h1>
 
-            <p className="text-sm sm:text-base text-zinc-200 leading-relaxed max-w-xl">
+            <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-xl">
               {HERO_SLIDES[currentSlide].subtitle}
             </p>
 
-            <div className="pt-2 flex flex-wrap items-center gap-3">
+            <div className="pt-2 flex flex-wrap items-center gap-3 sm:gap-4">
               <Link
                 href="/studio"
-                className="inline-flex items-center gap-2 rounded-full bg-gold-gradient px-7 py-3 text-xs sm:text-sm font-semibold text-white shadow-gold transition-transform hover:scale-[1.02]"
+                className="inline-flex items-center gap-2 rounded-full bg-gold-gradient px-7 py-3.5 text-xs sm:text-sm font-semibold text-black shadow-gold transition-transform hover:scale-[1.02]"
               >
                 <Sparkles className="size-4" />
-                Launch 3D Studio
+                Launch 3D Try-On Studio
               </Link>
               <Link
                 href="#curated-wardrobe"
-                className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-6 py-3 text-xs sm:text-sm font-medium text-white backdrop-blur-md hover:bg-white/20 transition-colors"
+                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3.5 text-xs sm:text-sm font-medium text-white backdrop-blur-md hover:bg-white/20 transition-colors"
               >
-                Explore Wardrobe <ArrowRight className="size-4" />
+                Browse Heirloom Trunk <ArrowRight className="size-4" />
               </Link>
             </div>
           </div>
 
-          {/* Slide Indicator Bar */}
-          <div className="mt-8 flex items-center gap-2">
+          <div className="mt-10 flex items-center gap-3">
             {HERO_SLIDES.map((_, idx) => (
               <button
                 key={idx}
@@ -122,7 +127,7 @@ export default function HomePage() {
                 onClick={() => setCurrentSlide(idx)}
                 aria-label={`Slide ${idx + 1}`}
                 className={`h-1.5 transition-all rounded-full ${
-                  idx === currentSlide ? 'w-8 bg-gold' : 'w-2 bg-white/40'
+                  idx === currentSlide ? 'w-10 bg-gold' : 'w-2 bg-white/30 hover:bg-white/60'
                 }`}
               />
             ))}
@@ -130,13 +135,15 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 2. THE 4-PIECE DOORSTEP TRIAL PROCESS */}
+      {/* 2. THE DOORSTEP TRIAL BLUEPRINT */}
       <section className="mx-auto max-w-7xl px-2">
-        <div className="text-center max-w-xl mx-auto mb-10 space-y-2">
-          <p className="text-xs font-semibold uppercase tracking-widest text-gold">The Doorstep Maison Experience</p>
-          <h2 className="font-serif text-3xl sm:text-4xl">How Doorstep Trial Works</h2>
+        <div className="text-center max-w-xl mx-auto mb-12 space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-widest text-gold">
+            The Doorstep Maison Experience
+          </p>
+          <h2 className="font-serif text-3xl sm:text-4xl">How Your Petikara Trunk Works</h2>
           <p className="text-xs sm:text-sm text-muted-foreground">
-            Pick 4 pieces across Men, Women, and Kids. Delivered in a signature wooden trunk for a 1-hour private fitting at home.
+            Experience luxury fitting the way royal households did — tailored, unhurried, and in the comfort of your home.
           </p>
         </div>
 
@@ -144,32 +151,32 @@ export default function HomePage() {
           {[
             {
               step: '01',
-              title: 'Curate 4 Outfits',
-              desc: 'Select any 4 garments across Sarees, Sherwanis, and Kids sets.',
+              title: 'Select Any 4 Outfits',
+              desc: 'Mix and match between Bridal Sarees, Men’s Bandhgalas, and Kids Kurta sets without paying for them upfront.',
               icon: ShoppingBag,
             },
             {
               step: '02',
-              title: 'Try in 3D Studio',
-              desc: 'Preview realistic fabric drape and test banquet banquet lighting.',
+              title: 'Virtual 3D Drape Preview',
+              desc: 'Preview realistic fabric drape and test banquet lighting in our Digital Atelier Studio.',
               icon: Sparkles,
             },
             {
               step: '03',
-              title: '1-Hour Home Trial',
-              desc: 'Hand-delivered at your preferred hour slot in Bengaluru.',
+              title: '1-Hour Private Trial',
+              desc: 'Our style concierge delivers the trunk at your selected slot. Try pieces in complete privacy.',
               icon: Clock,
             },
             {
               step: '04',
-              title: 'Keep What Fits',
-              desc: 'Pay only for what you keep. The ₹199 trial deposit is refunded or adjusted.',
+              title: 'Keep What You Love',
+              desc: 'Keep only the pieces you want. The ₹199 trial deposit is refunded or adjusted upon purchase.',
               icon: HeartHandshake,
             },
           ].map((card) => (
             <div
               key={card.step}
-              className="rounded-2xl border border-border bg-card p-6 space-y-3 shadow-sm hover:border-gold/60 transition-colors"
+              className="relative rounded-2xl border border-border/80 bg-card p-6 space-y-3 transition-all hover:border-gold/50"
             >
               <div className="flex items-center justify-between">
                 <div className="grid size-10 place-items-center rounded-xl bg-gold/10 text-gold border border-gold/30">
@@ -184,36 +191,36 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. KIDS & FAMILY SECTION */}
-      <section className="relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-[#f8f5f0] to-[#f0ece1] p-8 sm:p-12 shadow-sm">
+      {/* 3. KIDS & FAMILY SPOTLIGHT */}
+      <section className="relative overflow-hidden rounded-3xl border border-gold/30 bg-gradient-to-br from-card via-card/80 to-surface-raised p-8 sm:p-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-7 space-y-4">
-            <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs text-gold font-medium">
-              <Smile className="size-3.5" /> Zero-Fuss Kids Dressing
+            <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs text-gold">
+              <Smile className="size-3.5" /> For Parents: No More Fitting Room Stress
             </div>
-            <h2 className="font-serif text-3xl sm:text-5xl font-semibold leading-tight text-foreground">
-              No More Changing Room Meltdowns for Kids.
+            <h2 className="font-serif text-3xl sm:text-5xl font-semibold leading-tight">
+              Indian Festive Wear That Kids <span className="italic text-gold">Actually</span> Love Wearing.
             </h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Skip crowded bazaars. Let your children try 4 festive kurtas and lehengas in their own room with zero pressure.
+              Skip crowded malls and fitting room meltdowns. With Petikara, your little ones try pure, gentle fabrics right at home in their own comfort zone.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-              <div className="flex items-center gap-2 text-xs font-medium text-foreground/80">
+              <div className="flex items-center gap-2.5 text-xs text-zinc-300">
                 <CheckCircle2 className="size-4 text-gold shrink-0" />
                 <span>100% Mulmul Hypoallergenic Soft Linings</span>
               </div>
-              <div className="flex items-center gap-2 text-xs font-medium text-foreground/80">
+              <div className="flex items-center gap-2.5 text-xs text-zinc-300">
                 <CheckCircle2 className="size-4 text-gold shrink-0" />
-                <span>Zero-Itch Zari Stitching</span>
+                <span>Zero-Itch Seamless Zari Edges</span>
               </div>
-              <div className="flex items-center gap-2 text-xs font-medium text-foreground/80">
+              <div className="flex items-center gap-2.5 text-xs text-zinc-300">
                 <CheckCircle2 className="size-4 text-gold shrink-0" />
-                <span>Father & Son / Mother & Daughter Sets</span>
+                <span>Father-Son & Mother-Daughter Matching Sets</span>
               </div>
-              <div className="flex items-center gap-2 text-xs font-medium text-foreground/80">
+              <div className="flex items-center gap-2.5 text-xs text-zinc-300">
                 <CheckCircle2 className="size-4 text-gold shrink-0" />
-                <span>Full 1-Hour Patience Window</span>
+                <span>Full 1-Hour Patience Window at Home</span>
               </div>
             </div>
 
@@ -224,40 +231,44 @@ export default function HomePage() {
                   setActiveTab('kids')
                   document.getElementById('curated-wardrobe')?.scrollIntoView({ behavior: 'smooth' })
                 }}
-                className="inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-2.5 text-xs font-semibold text-white hover:bg-gold transition-colors"
+                className="inline-flex items-center gap-2 rounded-full border border-gold/60 bg-gold/10 px-6 py-2.5 text-xs font-semibold text-gold hover:bg-gold hover:text-black transition-all"
               >
-                Browse Kids Festive Sets <ChevronRight className="size-4" />
+                Explore Junior Heritage Line <ChevronRight className="size-4" />
               </button>
             </div>
           </div>
 
-          <div className="lg:col-span-5 relative aspect-[4/3] rounded-2xl overflow-hidden border border-border shadow-md">
+          <div className="lg:col-span-5 relative aspect-[4/3] rounded-2xl overflow-hidden border border-border shadow-2xl">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?auto=format&fit=crop&w=900&q=80"
-              alt="Kids Festive Happiness"
+              alt="Kids Festive Collection"
               className="h-full w-full object-cover"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+            <div className="absolute bottom-4 left-4 right-4 text-xs text-white/90">
+              <p className="font-serif text-sm font-semibold">Bespoke Comfort Guaranteed</p>
+              <p className="text-[11px] text-white/70">Pure Chanderi & Spun Brocade built for play.</p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 4. CURATED WARDROBE (4 ITEMS PER GENDER WITH REAL PHOTOS) */}
+      {/* 4. BALANCED ATELIER WARDROBE */}
       <section id="curated-wardrobe" className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-border pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-border/80 pb-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-gold">The Wardrobe</p>
-            <h2 className="font-serif text-3xl sm:text-4xl">Heirloom Handlooms & Tailoring</h2>
+            <p className="text-xs font-semibold uppercase tracking-widest text-gold">The Collection</p>
+            <h2 className="font-serif text-3xl sm:text-4xl">Artisanal Heirloom Pieces</h2>
           </div>
 
-          {/* Gender Filter Pills */}
-          <div className="inline-flex items-center rounded-full border border-border bg-card p-1 text-xs shadow-sm">
+          <div className="inline-flex items-center rounded-full border border-border/80 bg-surface-raised p-1 text-xs">
             {(
               [
-                { id: 'all', label: 'All' },
+                { id: 'all', label: 'All Collections' },
                 { id: 'women', label: 'Women' },
                 { id: 'men', label: 'Men' },
-                { id: 'kids', label: 'Kids' },
+                { id: 'kids', label: 'Kids & Juniors' },
               ] as const
             ).map((tab) => (
               <button
@@ -266,7 +277,7 @@ export default function HomePage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`rounded-full px-4 py-1.5 font-medium transition-all ${
                   activeTab === tab.id
-                    ? 'bg-foreground font-semibold text-white shadow-sm'
+                    ? 'bg-gold font-semibold text-black shadow-sm'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
@@ -278,11 +289,13 @@ export default function HomePage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredProducts.map((p) => {
-            const img = (p as any).imageUrl ?? 'https://images.unsplash.com/photo-1610030469983-98e550d6193c'
+            const img =
+              (p as any).imageUrl ??
+              'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80'
             return (
               <div
                 key={p.id}
-                className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-border bg-card shadow-sm hover:border-gold/60 transition-all"
+                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-gold/60 hover:shadow-xl"
               >
                 <div>
                   <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted">
@@ -290,9 +303,9 @@ export default function HomePage() {
                     <img
                       src={img}
                       alt={p.name}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    <div className="absolute top-3 left-3 rounded-full bg-white/90 px-2.5 py-0.5 text-[10px] font-medium text-foreground uppercase tracking-wider backdrop-blur-sm">
+                    <div className="absolute top-3 left-3 rounded-full bg-black/60 backdrop-blur-md px-2.5 py-0.5 text-[10px] text-white/90 uppercase tracking-widest">
                       {p.gender}
                     </div>
                   </div>
@@ -312,9 +325,9 @@ export default function HomePage() {
                     type="button"
                     onClick={() => {
                       addToTrunk(p.id, p.sizes[0] ?? 'Standard')
-                      toast.success(`${p.name} added to your trunk!`)
+                      toast.success(`${p.name} added to your home trial trunk!`)
                     }}
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-border bg-secondary py-2.5 text-xs font-semibold text-foreground hover:bg-gold hover:text-white transition-colors"
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-gold/60 bg-gold/10 py-2.5 text-xs font-semibold text-gold transition-colors hover:bg-gold hover:text-black"
                   >
                     <ShoppingBag className="size-3.5" />
                     Add to Doorstep Trunk
@@ -327,18 +340,17 @@ export default function HomePage() {
       </section>
 
       {/* 5. LUXURY ATELIER FOOTNOTE */}
-      <footer className="border-t border-border pt-12 pb-8 text-center text-xs text-muted-foreground space-y-3">
-        <p className="font-serif text-xl tracking-wider uppercase font-semibold text-foreground">
+      <footer className="border-t border-border/80 pt-12 pb-8 text-center text-xs text-muted-foreground space-y-3">
+        <p className="font-serif text-xl tracking-wider text-gold-gradient uppercase font-semibold">
           Petikara
         </p>
         <p className="max-w-md mx-auto">
-          Private Doorstep Trial Maison for Indian Couture. Hand-delivered across Bengaluru with an unhurried 1-hour styling window.
+          Private Doorstep Trial Atelier for Indian Handwoven Couture. Delivered across Bengaluru with an unhurried 1-hour styling window.
         </p>
         <p className="text-[11px] text-muted-foreground/60">
           © {new Date().getFullYear()} Petikara. All rights reserved.
         </p>
       </footer>
-
     </div>
   )
 }
