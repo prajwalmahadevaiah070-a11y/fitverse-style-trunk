@@ -21,9 +21,8 @@ import type { Product } from "@/lib/fitverse-types";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/studio")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    garment: typeof search["garment"] === "string" ? (search["garment"] as string) : undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>): { garment?: string } =>
+    typeof search["garment"] === "string" ? { garment: search["garment"] as string } : {},
   head: () => ({
     meta: [
       { title: "Digital Try-On Studio — Layer Outfits on Your Photo | FitVerse" },
