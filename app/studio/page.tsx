@@ -3,22 +3,32 @@
 import Link from 'next/link'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
-import { ArrowRight, ImagePlus, Sparkles, Trash2 } from 'lucide-react'
+import { ArrowRight, ChevronLeft, ChevronRight, ImagePlus, Sparkles, Trash2 } from 'lucide-react'
 
 import { GarmentSwatch } from '@/components/GarmentSwatch'
 import { Screen } from '@/components/Screen'
 import { useFitVerse } from '@/lib/fitverse-store'
 import { cn } from '@/lib/utils'
+import type { Gender } from '@/lib/fitverse-types'
 
 export default function StudioPage() {
   const { products, photos, addPhoto, removePhoto } = useFitVerse()
   const fileRef = useRef<HTMLInputElement>(null)
+  const carouselRef = useRef<HTMLDivElement>(null)
+
   const [photo, setPhoto] = useState<string | null>(null)
+  const [selectedGender, setSelectedGender] = useState<'all' | Gender>('all')
   const [garmentId, setGarmentId] = useState(products[0]?.id ?? '')
   const [scale, setScale] = useState(70)
   const [offsetY, setOffsetY] = useState(20)
 
-  const garment = products.find((p) => p.id === garmentId) ?? products[0]
+  // Filter garments based on gender tab
+  const filteredProducts = products.filter((p) => {
+    if (selectedGender === 'all') return true
+    return p.gender === selectedGender
+  })
+
+  const garment = products.find((p) => p.id === garmentId) ?? filteredProducts[0] ?? products[0]
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -39,6 +49,13 @@ export default function StudioPage() {
     }
     addPhoto({ label: garment?.name ?? 'Look', dataUrl: photo })
     toast.success('Look saved to your studio')
+  }
+
+  const scrollCarousel = (direction: 'left' | 'right') => {
+    if (carouselRef.current) {
+      const scrollAmount = direction === 'left' ? -260 : 260
+      carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' })
+    }
   }
 
   return (
@@ -89,41 +106,113 @@ export default function StudioPage() {
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
-            className="flex-1 rounded-full border border-border py-2 text-xs"
+            className="flex-1 rounded-full border border-border py-2 text-xs hover:border-gold transition-colors"
           >
             Change photo
           </button>
           <button
             type="button"
             onClick={() => setPhoto(null)}
-            className="flex-1 rounded-full border border-border py-2 text-xs text-destructive"
+            className="flex-1 rounded-full border border-border py-2 text-xs text-destructive hover:bg-destructive/10 transition-colors"
           >
             Remove
           </button>
         </div>
       )}
 
-      <div className="mt-5">
-        <p className="eyebrow mb-2">Choose a garment</p>
-        <div className="hide-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-2">
-          {products.map((p) => (
-            <button
-              key={p.id}
-              type="button"
-              onClick={() => setGarmentId(p.id)}
-              className={cn(
-                'w-20 shrink-0 rounded-lg border p-2 transition-colors',
-                garmentId === p.id
-                  ? 'border-gold bg-gold/10'
-                  : 'border-border bg-card',
-              )}
-            >
-              <GarmentSwatch product={p} className="h-16 w-full" />
-              <span className="mt-1 line-clamp-1 block text-[0.6rem] text-muted-foreground">
-                {p.brand}
-              </span>
-            </button>
-          ))}
+      {/* CHOOSE A GARMENT SECTION */}
+      <div className="mt-6 space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <p className="eyebrow">Choose a garment</p>
+
+          {/* Gender Filter Pills */}
+          <div className="inline-flex items-center rounded-full border border-border/70 bg-surface-raised p-1 text-xs self-start sm:self-auto">
+            {(
+              [
+                { id: 'all', label: 'All' },
+                { id: 'women', label: 'Women' },
+                { id: 'men', label: 'Men' },
+                { id: 'kids', label: 'Kids' },
+              ] as const
+            ).map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => {
+                  setSelectedGender(tab.id)
+                  const firstOfGender = products.find(
+                    (p) => tab.id === 'all' || p.gender === tab.id
+                  )
+                  if (firstOfGender) setGarmentId(firstOfGender.id)
+                }}
+                className={cn(
+                  'rounded-full px-3.5 py-1 font-medium capitalize transition-all',
+                  selectedGender === tab.id
+                    ? 'bg-gold font-semibold text-black shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Carousel with Navigation Arrows */}
+        <div className="relative group">
+          {/* Scroll Left Button */}
+          <button
+            type="button"
+            onClick={() => scrollCarousel('left')}
+            aria-label="Scroll left"
+            className="absolute -left-3 top-1/2 -translate-y-1/2 z-10 hidden sm:grid size-8 place-items-center rounded-full border border-border bg-card/95 text-foreground shadow-md backdrop-blur hover:border-gold hover:text-gold transition-colors"
+          >
+            <ChevronLeft className="size-4" />
+          </button>
+
+          {/* Garments Container */}
+          <div
+            ref={carouselRef}
+            className="hide-scrollbar -mx-4 flex gap-2.5 overflow-x-auto px-4 pb-2 scroll-smooth"
+          >
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map((p) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => setGarmentId(p.id)}
+                  className={cn(
+                    'w-24 shrink-0 rounded-xl border p-2 text-left transition-all',
+                    garmentId === p.id
+                      ? 'border-gold bg-gold/10 ring-1 ring-gold shadow-md'
+                      : 'border-border bg-card hover:border-border/80'
+                  )}
+                >
+                  <GarmentSwatch product={p} className="h-16 w-full" />
+                  <span className="mt-1 line-clamp-1 block text-[0.65rem] font-medium text-foreground">
+                    {p.name}
+                  </span>
+                  <span className="line-clamp-1 block text-[0.6rem] text-muted-foreground">
+                    {p.brand}
+                  </span>
+                </button>
+              ))
+            ) : (
+              <p className="py-4 text-xs text-muted-foreground">
+                No couture items found in this section yet.
+              </p>
+            )}
+          </div>
+
+          {/* Scroll Right Button */}
+          <button
+            type="button"
+            onClick={() => scrollCarousel('right')}
+            aria-label="Scroll right"
+            className="absolute -right-3 top-1/2 -translate-y-1/2 z-10 hidden sm:grid size-8 place-items-center rounded-full border border-border bg-card/95 text-foreground shadow-md backdrop-blur hover:border-gold hover:text-gold transition-colors"
+          >
+            <ChevronRight className="size-4" />
+          </button>
         </div>
       </div>
 
@@ -160,7 +249,7 @@ export default function StudioPage() {
         </div>
       )}
 
-      <div className="mt-4 flex gap-3">
+      <div className="mt-5 flex gap-3">
         <button
           type="button"
           onClick={saveLook}
@@ -171,7 +260,7 @@ export default function StudioPage() {
         </button>
         <Link
           href="/trunk"
-          className="inline-flex items-center justify-center gap-2 rounded-full border border-border px-5 py-3 text-sm font-medium"
+          className="inline-flex items-center justify-center gap-2 rounded-full border border-border px-5 py-3 text-sm font-medium hover:bg-muted transition-colors"
         >
           Trunk <ArrowRight className="size-4" />
         </Link>
@@ -196,7 +285,7 @@ export default function StudioPage() {
                   type="button"
                   onClick={() => removePhoto(ph.id)}
                   aria-label="Delete look"
-                  className="absolute right-1 top-1 grid size-6 place-items-center rounded-full bg-background/70 text-destructive backdrop-blur"
+                  className="absolute right-1 top-1 grid size-6 place-items-center rounded-full bg-background/70 text-destructive backdrop-blur hover:bg-background"
                 >
                   <Trash2 className="size-3.5" />
                 </button>
