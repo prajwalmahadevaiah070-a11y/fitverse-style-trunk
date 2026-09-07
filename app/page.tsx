@@ -50,16 +50,16 @@ export default function HomePage() {
     return p.gender === activeTab
   })
 
-  const handleAdd = (id: string, name: string) => {
+  const handleAdd = (id: string) => {
     addToTrunk(id, 'Standard')
     setAddedId(id)
-    setTimeout(() => setAddedId(null), 2200)
+    setTimeout(() => setAddedId(null), 2000)
   }
 
   return (
-    <div className="-mt-6 -mx-4 sm:-mx-6 lg:-mx-8 space-y-20 pb-16">
-      {/* 1. SEAMLESS FULL-BLEED EDITORIAL HERO */}
-      <section className="relative h-[90vh] min-h-[620px] w-full overflow-hidden border-b border-border/70">
+    <div className="w-full bg-[#0b0f14] text-[#f5f5f5] pb-24">
+      {/* 1. CINEMATIC FULL-BLEED LIVING HERO */}
+      <section className="relative h-[90vh] min-h-[640px] w-full overflow-hidden border-b border-[#222a35]">
         {HERO_SLIDES.map((slide, index) => (
           <div
             key={slide.title}
@@ -71,43 +71,45 @@ export default function HomePage() {
             <img
               src={slide.image}
               alt={slide.title}
-              className="h-full w-full object-cover object-center scale-105 transition-transform duration-[8000ms] ease-out"
+              className="h-full w-full object-cover object-center"
               style={{
-                transform: index === currentSlide ? 'scale(1)' : 'scale(1.08)',
+                transform: index === currentSlide ? 'scale(1)' : 'scale(1.06)',
+                transition: 'transform 7s ease-out',
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-black/35" />
-            <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/40 to-transparent" />
+            {/* Cinematic Luxury Vignette */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f14] via-[#0b0f14]/50 to-black/40" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0b0f14]/90 via-[#0b0f14]/40 to-transparent" />
           </div>
         ))}
 
-        <div className="relative z-20 mx-auto flex h-full max-w-7xl flex-col justify-end px-6 pb-20 pt-24 sm:px-8">
+        <div className="relative z-20 mx-auto flex h-full max-w-7xl flex-col justify-end px-6 pb-20 pt-20 sm:px-8">
           <div className="max-w-2xl space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-gold/50 bg-black/50 px-4 py-1.5 backdrop-blur-md">
-              <span className="size-2 rounded-full bg-gold animate-pulse" />
-              <span className="text-[11px] font-medium uppercase tracking-widest text-gold-light">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#d4af37]/60 bg-black/60 px-4 py-1.5 backdrop-blur-md">
+              <span className="size-2 rounded-full bg-[#d4af37] animate-pulse" />
+              <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em] text-[#f3e5ab]">
                 {HERO_SLIDES[currentSlide].tag}
               </span>
             </div>
 
-            <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] text-white">
+            <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-bold leading-[1.08] text-white tracking-wide">
               {HERO_SLIDES[currentSlide].title}
             </h1>
 
-            <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-xl">
+            <p className="text-sm sm:text-base text-gray-300 leading-relaxed max-w-xl font-light">
               {HERO_SLIDES[currentSlide].subtitle}
             </p>
 
             <div className="pt-2 flex flex-wrap items-center gap-4">
               <Link
                 href="/studio"
-                className="inline-flex items-center gap-2 rounded-full bg-gold-gradient px-8 py-3.5 text-xs sm:text-sm font-semibold text-black shadow-gold transition-transform hover:scale-[1.02]"
+                className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-[#e8d082] via-[#d4af37] to-[#b89324] px-8 py-3.5 text-xs sm:text-sm font-semibold text-black shadow-lg shadow-[#d4af37]/20 transition-transform hover:scale-[1.03]"
               >
                 Launch 3D Try-On Studio →
               </Link>
               <a
                 href="#curated-wardrobe"
-                className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-7 py-3.5 text-xs sm:text-sm font-medium text-white backdrop-blur-md hover:bg-white/20 transition-colors"
+                className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/10 px-8 py-3.5 text-xs sm:text-sm font-medium text-white backdrop-blur-md hover:bg-white/20 transition-all"
               >
                 Browse Curated Trunk ↓
               </a>
@@ -122,7 +124,7 @@ export default function HomePage() {
                 onClick={() => setCurrentSlide(idx)}
                 aria-label={`Slide ${idx + 1}`}
                 className={`h-1.5 transition-all rounded-full ${
-                  idx === currentSlide ? 'w-12 bg-gold' : 'w-2.5 bg-white/30 hover:bg-white/60'
+                  idx === currentSlide ? 'w-12 bg-[#d4af37]' : 'w-2.5 bg-white/30 hover:bg-white/60'
                 }`}
               />
             ))}
@@ -130,83 +132,83 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-20">
-        {/* 2. DOORSTEP TRIAL BLUEPRINT */}
-        <section className="space-y-12">
-          <div className="text-center max-w-xl mx-auto space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-widest text-gold">
-              The Doorstep Maison Experience
-            </p>
-            <h2 className="font-serif text-3xl sm:text-4xl">How Your Petikara Trunk Works</h2>
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              Tailored, unhurried luxury fittings delivered directly to your doorstep.
-            </p>
-          </div>
+      {/* 2. THE DOORSTEP TRIAL BLUEPRINT */}
+      <section className="mx-auto max-w-7xl px-6 sm:px-8 mt-24">
+        <div className="text-center max-w-2xl mx-auto space-y-3 mb-16">
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#d4af37]">
+            The Doorstep Maison Experience
+          </p>
+          <h2 className="font-serif text-3xl sm:text-5xl font-normal">How Your Petikara Trunk Works</h2>
+          <p className="text-xs sm:text-sm text-gray-400 font-light leading-relaxed">
+            Tailored, unhurried luxury fittings delivered directly to your doorstep.
+          </p>
+        </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                step: '01',
-                title: 'Select 4 Outfits',
-                desc: 'Pick up to 4 pieces across Men, Women, and Kids collections without paying for garments upfront.',
-              },
-              {
-                step: '02',
-                title: 'Virtual 3D Drape',
-                desc: 'Preview fabric textures, zari reflection, and banquet lighting in our Digital Atelier Studio.',
-              },
-              {
-                step: '03',
-                title: '1-Hour Private Trial',
-                desc: 'Our style concierge delivers the trunk at your scheduled slot. Try pieces at home in comfort.',
-              },
-              {
-                step: '04',
-                title: 'Keep What You Love',
-                desc: 'Pay only for what you keep. The ₹199 trial deposit is refunded or adjusted upon purchase.',
-              },
-            ].map((card) => (
-              <div
-                key={card.step}
-                className="relative rounded-2xl border border-border/80 bg-card p-6 space-y-3 transition-all hover:border-gold/50 shadow-sm"
-              >
-                <span className="font-serif text-3xl font-bold text-gold">{card.step}</span>
-                <h3 className="font-serif text-lg font-semibold">{card.title}</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">{card.desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            {
+              step: '01',
+              title: 'Select 4 Outfits',
+              desc: 'Pick up to 4 pieces across Men, Women, and Kids collections without paying for garments upfront.',
+            },
+            {
+              step: '02',
+              title: 'Virtual 3D Drape',
+              desc: 'Preview fabric textures, zari reflection, and banquet lighting in our Digital Atelier Studio.',
+            },
+            {
+              step: '03',
+              title: '1-Hour Private Trial',
+              desc: 'Our style concierge delivers the trunk at your scheduled slot. Try pieces at home in complete comfort.',
+            },
+            {
+              step: '04',
+              title: 'Keep What You Love',
+              desc: 'Pay only for what you keep. The ₹199 trial deposit is fully adjusted upon purchase.',
+            },
+          ].map((card) => (
+            <div
+              key={card.step}
+              className="relative rounded-2xl border border-[#222a35] bg-[#121820] p-7 space-y-4 transition-all hover:border-[#d4af37]/60 hover:shadow-xl"
+            >
+              <span className="font-serif text-3xl font-bold text-[#d4af37]">{card.step}</span>
+              <h3 className="font-serif text-xl font-semibold text-white">{card.title}</h3>
+              <p className="text-xs text-gray-400 font-light leading-relaxed">{card.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
-        {/* 3. KIDS & FAMILY SPOTLIGHT */}
-        <section className="relative overflow-hidden rounded-3xl border border-gold/30 bg-gradient-to-br from-card via-card/90 to-surface-raised p-8 sm:p-12">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div className="lg:col-span-7 space-y-5">
-              <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-3.5 py-1 text-xs text-gold">
+      {/* 3. KIDS & FAMILY SPOTLIGHT */}
+      <section className="mx-auto max-w-7xl px-6 sm:px-8 mt-24">
+        <div className="relative overflow-hidden rounded-3xl border border-[#d4af37]/40 bg-gradient-to-br from-[#121820] via-[#121820]/90 to-[#0b0f14] p-8 sm:p-14">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <div className="lg:col-span-7 space-y-6">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#d4af37]/50 bg-[#d4af37]/10 px-4 py-1.5 text-xs text-[#d4af37]">
                 <span>★</span> Junior Atelier: No Crowded Changing Rooms
               </div>
-              <h2 className="font-serif text-3xl sm:text-5xl font-semibold leading-tight">
-                Indian Festive Wear That Kids <span className="italic text-gold">Actually</span> Love Wearing.
+              <h2 className="font-serif text-3xl sm:text-5xl font-normal leading-tight text-white">
+                Indian Festive Wear That Kids <span className="italic text-[#d4af37]">Actually</span> Love Wearing.
               </h2>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Skip crowded bazaars and fitting room fatigue. Your little ones can try gentle, hypoallergenic handlooms at home while staying comfortable and relaxed.
+              <p className="text-sm text-gray-300 font-light leading-relaxed">
+                Skip crowded bazaars and fitting room fatigue. Your little ones can try gentle, hypoallergenic handlooms at home while staying completely relaxed.
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs text-zinc-300">
-                <div className="flex items-center gap-2.5">
-                  <span className="text-gold font-bold">✓</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 text-xs text-gray-300">
+                <div className="flex items-center gap-3">
+                  <span className="text-[#d4af37] font-bold">✓</span>
                   <span>100% Mulmul Hypoallergenic Linings</span>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <span className="text-gold font-bold">✓</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-[#d4af37] font-bold">✓</span>
                   <span>Zero-Itch Covered Zari Borders</span>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <span className="text-gold font-bold">✓</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-[#d4af37] font-bold">✓</span>
                   <span>Matching Father-Son & Mother-Daughter Sets</span>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <span className="text-gold font-bold">✓</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-[#d4af37] font-bold">✓</span>
                   <span>Unhurried 1-Hour Fitting at Home</span>
                 </div>
               </div>
@@ -218,14 +220,14 @@ export default function HomePage() {
                     setActiveTab('kids')
                     document.getElementById('curated-wardrobe')?.scrollIntoView({ behavior: 'smooth' })
                   }}
-                  className="inline-flex items-center gap-2 rounded-full border border-gold/60 bg-gold/10 px-6 py-2.5 text-xs font-semibold text-gold hover:bg-gold hover:text-black transition-all"
+                  className="inline-flex items-center gap-2 rounded-full border border-[#d4af37] bg-[#d4af37]/10 px-7 py-3 text-xs font-semibold text-[#d4af37] hover:bg-[#d4af37] hover:text-black transition-all"
                 >
-                  Explore Junior Line →
+                  Explore Junior Heritage Line →
                 </button>
               </div>
             </div>
 
-            <div className="lg:col-span-5 relative aspect-[4/3] rounded-2xl overflow-hidden border border-border shadow-2xl">
+            <div className="lg:col-span-5 relative aspect-[4/3] rounded-2xl overflow-hidden border border-[#222a35] shadow-2xl">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?auto=format&fit=crop&w=900&q=80"
@@ -233,113 +235,113 @@ export default function HomePage() {
                 className="h-full w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 text-xs text-white/90">
-                <p className="font-serif text-sm font-semibold">Bespoke Comfort Guaranteed</p>
-                <p className="text-[11px] text-white/70">Pure Chanderi & Spun Brocade built for play.</p>
+              <div className="absolute bottom-5 left-5 right-5 text-xs text-white">
+                <p className="font-serif text-base font-semibold">Bespoke Comfort Guaranteed</p>
+                <p className="text-[11px] text-gray-300">Pure Chanderi & Spun Brocade built for comfort and play.</p>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* 4. BALANCED ATELIER WARDROBE */}
-        <section id="curated-wardrobe" className="space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-border/80 pb-4">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-gold">The Collection</p>
-              <h2 className="font-serif text-3xl sm:text-4xl">Artisanal Heirloom Pieces</h2>
-            </div>
-
-            <div className="inline-flex items-center rounded-full border border-border/80 bg-surface-raised p-1 text-xs">
-              {(
-                [
-                  { id: 'all', label: 'All Collections' },
-                  { id: 'women', label: 'Women' },
-                  { id: 'men', label: 'Men' },
-                  { id: 'kids', label: 'Kids & Juniors' },
-                ] as const
-              ).map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`rounded-full px-4 py-1.5 font-medium transition-all ${
-                    activeTab === tab.id
-                      ? 'bg-gold font-semibold text-black shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+      {/* 4. BALANCED ATELIER WARDROBE */}
+      <section id="curated-wardrobe" className="mx-auto max-w-7xl px-6 sm:px-8 mt-24 space-y-10">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-[#222a35] pb-6">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#d4af37]">The Collection</p>
+            <h2 className="font-serif text-3xl sm:text-5xl font-normal text-white">Artisanal Heirloom Pieces</h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredProducts.map((p) => {
-              const img =
-                (p as any).imageUrl ??
-                'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80'
-              const isAdded = addedId === p.id
-              return (
-                <div
-                  key={p.id}
-                  className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-gold/60 hover:shadow-xl"
-                >
-                  <div>
-                    <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={img}
-                        alt={p.name}
-                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                      <div className="absolute top-3 left-3 rounded-full bg-black/60 backdrop-blur-md px-2.5 py-0.5 text-[10px] text-white/90 uppercase tracking-widest font-medium">
-                        {p.gender}
-                      </div>
-                    </div>
+          <div className="inline-flex items-center rounded-full border border-[#222a35] bg-[#121820] p-1 text-xs">
+            {(
+              [
+                { id: 'all', label: 'All Collections' },
+                { id: 'women', label: 'Women' },
+                { id: 'men', label: 'Men' },
+                { id: 'kids', label: 'Kids & Juniors' },
+              ] as const
+            ).map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={`rounded-full px-5 py-2 font-medium transition-all ${
+                  activeTab === tab.id
+                    ? 'bg-[#d4af37] font-semibold text-black shadow-sm'
+                    : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
-                    <div className="p-4 space-y-1.5">
-                      <p className="text-[10px] uppercase tracking-wider text-gold font-semibold">
-                        {p.brand} · {p.city}
-                      </p>
-                      <h3 className="font-serif text-base font-semibold leading-snug line-clamp-1">{p.name}</h3>
-                      <p className="text-xs text-muted-foreground line-clamp-2">{p.description}</p>
-                      <p className="pt-1 font-serif text-sm font-bold text-foreground">{formatINR(p.price)}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7">
+          {filteredProducts.map((p) => {
+            const img =
+              (p as any).imageUrl ??
+              'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80'
+            const isAdded = addedId === p.id
+            return (
+              <div
+                key={p.id}
+                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-[#222a35] bg-[#121820] transition-all hover:border-[#d4af37]/60 hover:shadow-2xl"
+              >
+                <div>
+                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-black/40">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={img}
+                      alt={p.name}
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute top-3 left-3 rounded-full bg-black/70 backdrop-blur-md px-3 py-1 text-[9px] text-white uppercase tracking-[0.2em] font-semibold">
+                      {p.gender}
                     </div>
                   </div>
 
-                  <div className="p-4 pt-0">
-                    <button
-                      type="button"
-                      onClick={() => handleAdd(p.id, p.name)}
-                      className={`w-full inline-flex items-center justify-center rounded-full py-2.5 text-xs font-semibold transition-all ${
-                        isAdded
-                          ? 'bg-emerald-600 text-white'
-                          : 'border border-gold/60 bg-gold/10 text-gold hover:bg-gold hover:text-black'
-                      }`}
-                    >
-                      {isAdded ? 'Added to Trunk ✓' : 'Add to Doorstep Trunk'}
-                    </button>
+                  <div className="p-5 space-y-2">
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-[#d4af37] font-semibold">
+                      {p.brand} · {p.city}
+                    </p>
+                    <h3 className="font-serif text-lg font-semibold leading-snug line-clamp-1 text-white">{p.name}</h3>
+                    <p className="text-xs text-gray-400 font-light line-clamp-2 leading-relaxed">{p.description}</p>
+                    <p className="pt-2 font-serif text-base font-bold text-[#f5f5f5]">{formatINR(p.price)}</p>
                   </div>
                 </div>
-              )
-            })}
-          </div>
-        </section>
 
-        {/* 5. FOOTER */}
-        <footer className="border-t border-border/80 pt-12 pb-8 text-center text-xs text-muted-foreground space-y-3">
-          <p className="font-serif text-xl tracking-wider text-gold-gradient uppercase font-semibold">
-            Petikara
-          </p>
-          <p className="max-w-md mx-auto">
-            Private Doorstep Trial Atelier for Indian Handwoven Couture. Delivered across Bengaluru with an unhurried 1-hour styling window.
-          </p>
-          <p className="text-[11px] text-muted-foreground/60">
-            © {new Date().getFullYear()} Petikara. All rights reserved.
-          </p>
-        </footer>
-      </div>
+                <div className="p-5 pt-0">
+                  <button
+                    type="button"
+                    onClick={() => handleAdd(p.id)}
+                    className={`w-full inline-flex items-center justify-center rounded-full py-3 text-xs font-semibold uppercase tracking-wider transition-all ${
+                      isAdded
+                        ? 'bg-emerald-600 text-white'
+                        : 'border border-[#d4af37] bg-[#d4af37]/10 text-[#d4af37] hover:bg-[#d4af37] hover:text-black'
+                    }`}
+                  >
+                    {isAdded ? 'Added to Trunk ✓' : 'Add to Doorstep Trunk'}
+                  </button>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* 5. EDITORIAL FOOTER */}
+      <footer className="mx-auto max-w-7xl px-6 sm:px-8 mt-28 border-t border-[#222a35] pt-14 text-center text-xs text-gray-500 space-y-4">
+        <p className="font-serif text-2xl tracking-[0.25em] text-[#d4af37] uppercase font-semibold">
+          Petikara
+        </p>
+        <p className="max-w-md mx-auto font-light leading-relaxed">
+          Private Doorstep Trial Atelier for Indian Handwoven Couture. Delivered across Bengaluru with an unhurried 1-hour styling window.
+        </p>
+        <p className="text-[11px] text-gray-600">
+          © {new Date().getFullYear()} Petikara. All rights reserved.
+        </p>
+      </footer>
     </div>
   )
 }
