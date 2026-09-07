@@ -43,9 +43,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`dark ${cormorant.variable} ${jost.variable}`}>
-      <body className="antialiased">
+      <body className="antialiased min-h-screen bg-background text-foreground">
         <FitVerseProvider>
-          <div className="mx-auto min-h-dvh w-full max-w-[520px] pb-24">
+          <div className="mx-auto min-h-dvh w-full max-w-7xl px-4 sm:px-6 lg:px-8 pb-24 md:pb-12">
             {children}
           </div>
           <BottomNav />
