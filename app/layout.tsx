@@ -1,71 +1,58 @@
-import { Analytics } from '@vercel/analytics/next'
-import type { Metadata, Viewport } from 'next'
-import { Cormorant_Garamond, Jost } from 'next/font/google'
-import { Toaster } from 'sonner'
-
-import { Navbar } from '@/components/Navbar'
-import { BottomNav } from '@/components/BottomNav'
-import { FitVerseProvider } from '@/lib/fitverse-store'
+import type { Metadata } from 'next'
+import Link from 'next/link'
 import './globals.css'
 
-const cormorant = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['500', '600', '700'],
-  variable: '--font-cormorant',
-  display: 'swap',
-})
-
-const jost = Jost({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600'],
-  variable: '--font-jost',
-  display: 'swap',
-})
-
 export const metadata: Metadata = {
-  title: 'Petikara — Indian Fashion With Doorstep Home Try-On',
+  title: 'Petikara · Luxury Indian Couture & Doorstep Home Trials',
   description:
-    'Shop handwoven sarees, sherwanis and modern Indian labels, style them in the Digital Try-On Studio, then try four pieces at home before you pay a refundable ₹199 deposit.',
-  generator: 'v0.app',
-}
-
-export const viewport: Viewport = {
-  themeColor: '#14181f',
-  colorScheme: 'dark',
-  width: 'device-width',
-  initialScale: 1,
-  viewportFit: 'cover',
+    'Experience curated Banarasi, Kanchipuram, Velvet Bandhgalas, and Kids festive couture delivered to your doorstep for a 1-hour private fitting.',
 }
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${jost.variable}`}>
-      <body className="antialiased min-h-screen bg-background text-foreground flex flex-col">
-        <FitVerseProvider>
-          <Navbar />
-          <main className="flex-1 mx-auto min-h-dvh w-full max-w-7xl px-4 sm:px-6 lg:px-8 pb-24 md:pb-12">
-            {children}
-          </main>
-          <div className="md:hidden">
-            <BottomNav />
+    <html lang="en" className="dark">
+      <body className="min-h-screen bg-background text-foreground antialiased selection:bg-gold/30 selection:text-gold">
+        {/* LUXURY NAVIGATION HEADER */}
+        <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-background/85 backdrop-blur-md">
+          <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+            <Link
+              href="/"
+              className="font-serif text-2xl font-bold tracking-widest text-gold-gradient uppercase"
+            >
+              Petikara
+            </Link>
+
+            <nav className="flex items-center gap-4 sm:gap-6 text-xs font-medium uppercase tracking-wider">
+              <Link
+                href="/"
+                className="text-foreground/80 hover:text-gold transition-colors"
+              >
+                Home
+              </Link>
+              <Link
+                href="/studio"
+                className="text-foreground/80 hover:text-gold transition-colors"
+              >
+                Try-On Studio
+              </Link>
+              <Link
+                href="/trunk"
+                className="rounded-full border border-gold/60 bg-gold/10 px-4 py-1.5 text-gold hover:bg-gold hover:text-black transition-all"
+              >
+                Doorstep Trunk
+              </Link>
+            </nav>
           </div>
-          <Toaster
-            theme="dark"
-            position="top-center"
-            toastOptions={{
-              style: {
-                background: 'oklch(0.268 0.019 256)',
-                border: '1px solid oklch(1 0 0 / 12%)',
-                color: 'oklch(0.965 0.004 90)',
-              },
-            }}
-          />
-        </FitVerseProvider>
-        {process.env.NODE_ENV === 'production' && <Analytics />}
+        </header>
+
+        {/* MAIN BODY CONTENT */}
+        <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+          {children}
+        </main>
       </body>
     </html>
   )
