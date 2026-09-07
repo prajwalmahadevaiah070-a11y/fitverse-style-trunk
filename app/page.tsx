@@ -2,16 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import {
-  Sparkles,
-  ShoppingBag,
-  ArrowRight,
-  Clock,
-  HeartHandshake,
-  CheckCircle2,
-  ChevronRight,
-  Smile,
-} from 'lucide-react'
 import { useFitVerse } from '@/lib/fitverse-store'
 import { formatINR } from '@/lib/fitverse-types'
 import { toast } from 'sonner'
@@ -45,10 +35,12 @@ const HERO_SLIDES = [
 
 export default function HomePage() {
   const { products, addToTrunk } = useFitVerse()
+  const [mounted, setMounted] = useState(false)
   const [currentSlide, setCurrentSlide] = useState(0)
   const [activeTab, setActiveTab] = useState<'all' | 'women' | 'men' | 'kids'>('all')
 
   useEffect(() => {
+    setMounted(true)
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length)
     }, 6500)
@@ -88,7 +80,7 @@ export default function HomePage() {
         <div className="relative z-20 mx-auto flex h-full max-w-7xl flex-col justify-end px-6 pb-16 pt-20 sm:px-8">
           <div className="max-w-2xl space-y-5">
             <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-black/40 px-3.5 py-1 backdrop-blur-md">
-              <Sparkles className="size-3.5 text-gold animate-pulse" />
+              <span className="size-2 rounded-full bg-gold animate-pulse" />
               <span className="text-[11px] font-medium uppercase tracking-widest text-gold-light">
                 {HERO_SLIDES[currentSlide].tag}
               </span>
@@ -107,14 +99,13 @@ export default function HomePage() {
                 href="/studio"
                 className="inline-flex items-center gap-2 rounded-full bg-gold-gradient px-7 py-3.5 text-xs sm:text-sm font-semibold text-black shadow-gold transition-transform hover:scale-[1.02]"
               >
-                <Sparkles className="size-4" />
-                Launch 3D Try-On Studio
+                Launch 3D Try-On Studio →
               </Link>
               <Link
                 href="#curated-wardrobe"
                 className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3.5 text-xs sm:text-sm font-medium text-white backdrop-blur-md hover:bg-white/20 transition-colors"
               >
-                Browse Heirloom Trunk <ArrowRight className="size-4" />
+                Browse Heirloom Trunk ↓
               </Link>
             </div>
           </div>
@@ -152,26 +143,22 @@ export default function HomePage() {
             {
               step: '01',
               title: 'Select Any 4 Outfits',
-              desc: 'Mix and match between Bridal Sarees, Men’s Bandhgalas, and Kids Kurta sets without paying for them upfront.',
-              icon: ShoppingBag,
+              desc: 'Mix and match between Bridal Sarees, Men’s Bandhgalas, and Kids Kurta sets without paying upfront.',
             },
             {
               step: '02',
               title: 'Virtual 3D Drape Preview',
               desc: 'Preview realistic fabric drape and test banquet lighting in our Digital Atelier Studio.',
-              icon: Sparkles,
             },
             {
               step: '03',
               title: '1-Hour Private Trial',
               desc: 'Our style concierge delivers the trunk at your selected slot. Try pieces in complete privacy.',
-              icon: Clock,
             },
             {
               step: '04',
               title: 'Keep What You Love',
               desc: 'Keep only the pieces you want. The ₹199 trial deposit is refunded or adjusted upon purchase.',
-              icon: HeartHandshake,
             },
           ].map((card) => (
             <div
@@ -179,10 +166,7 @@ export default function HomePage() {
               className="relative rounded-2xl border border-border/80 bg-card p-6 space-y-3 transition-all hover:border-gold/50"
             >
               <div className="flex items-center justify-between">
-                <div className="grid size-10 place-items-center rounded-xl bg-gold/10 text-gold border border-gold/30">
-                  <card.icon className="size-5" />
-                </div>
-                <span className="font-serif text-2xl font-bold text-muted-foreground/30">{card.step}</span>
+                <span className="font-serif text-2xl font-bold text-gold">{card.step}</span>
               </div>
               <h3 className="font-serif text-lg font-semibold">{card.title}</h3>
               <p className="text-xs text-muted-foreground leading-relaxed">{card.desc}</p>
@@ -196,7 +180,7 @@ export default function HomePage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-7 space-y-4">
             <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs text-gold">
-              <Smile className="size-3.5" /> For Parents: No More Fitting Room Stress
+              For Parents: No More Fitting Room Stress
             </div>
             <h2 className="font-serif text-3xl sm:text-5xl font-semibold leading-tight">
               Indian Festive Wear That Kids <span className="italic text-gold">Actually</span> Love Wearing.
@@ -207,19 +191,19 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
               <div className="flex items-center gap-2.5 text-xs text-zinc-300">
-                <CheckCircle2 className="size-4 text-gold shrink-0" />
+                <span className="text-gold font-bold">✓</span>
                 <span>100% Mulmul Hypoallergenic Soft Linings</span>
               </div>
               <div className="flex items-center gap-2.5 text-xs text-zinc-300">
-                <CheckCircle2 className="size-4 text-gold shrink-0" />
+                <span className="text-gold font-bold">✓</span>
                 <span>Zero-Itch Seamless Zari Edges</span>
               </div>
               <div className="flex items-center gap-2.5 text-xs text-zinc-300">
-                <CheckCircle2 className="size-4 text-gold shrink-0" />
+                <span className="text-gold font-bold">✓</span>
                 <span>Father-Son & Mother-Daughter Matching Sets</span>
               </div>
               <div className="flex items-center gap-2.5 text-xs text-zinc-300">
-                <CheckCircle2 className="size-4 text-gold shrink-0" />
+                <span className="text-gold font-bold">✓</span>
                 <span>Full 1-Hour Patience Window at Home</span>
               </div>
             </div>
@@ -233,7 +217,7 @@ export default function HomePage() {
                 }}
                 className="inline-flex items-center gap-2 rounded-full border border-gold/60 bg-gold/10 px-6 py-2.5 text-xs font-semibold text-gold hover:bg-gold hover:text-black transition-all"
               >
-                Explore Junior Heritage Line <ChevronRight className="size-4" />
+                Explore Junior Heritage Line →
               </button>
             </div>
           </div>
@@ -329,7 +313,6 @@ export default function HomePage() {
                     }}
                     className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-gold/60 bg-gold/10 py-2.5 text-xs font-semibold text-gold transition-colors hover:bg-gold hover:text-black"
                   >
-                    <ShoppingBag className="size-3.5" />
                     Add to Doorstep Trunk
                   </button>
                 </div>
