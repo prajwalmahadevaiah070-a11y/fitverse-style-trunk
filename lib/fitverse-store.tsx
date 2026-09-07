@@ -1,13 +1,15 @@
-import { Product } from './fitverse-types'
+'use client'
+
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+import type { Product, TrunkItem, StudioPhoto, Order, OrderStatus } from './fitverse-types'
 
 export const LUXURY_COUTURE_CATALOG: (Product & {
   imageUrl: string
   craftOrigin: string
   zariPurity?: string
 })[] = [
-  // ----------------------------------------------------
-  // WOMEN'S COUTURE
-  // ----------------------------------------------------
+  // --- WOMEN'S COUTURE ---
   {
     id: 'pk-w-01',
     name: 'Kadhwa Real Zari Banarasi Silk Saree',
@@ -96,9 +98,7 @@ export const LUXURY_COUTURE_CATALOG: (Product & {
     imageUrl: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=900&q=80',
   },
 
-  // ----------------------------------------------------
-  // MEN'S COUTURE
-  // ----------------------------------------------------
+  // --- MEN'S COUTURE ---
   {
     id: 'pk-m-01',
     name: 'Royal Heritage Velvet Bandhgala',
@@ -184,9 +184,7 @@ export const LUXURY_COUTURE_CATALOG: (Product & {
     imageUrl: 'https://images.unsplash.com/photo-1605518216938-7c31b7b14ad0?auto=format&fit=crop&w=900&q=80',
   },
 
-  // ----------------------------------------------------
-  // KIDS' COUTURE (Equal Prominence)
-  // ----------------------------------------------------
+  // --- KIDS' COUTURE ---
   {
     id: 'pk-k-01',
     name: "Boys' Royal Brocade Sherwani & Dhoti Set",
@@ -247,7 +245,7 @@ export const LUXURY_COUTURE_CATALOG: (Product & {
     reviews: 16,
     tryOnFee: 199,
     craftOrigin: 'Uttar Pradesh',
-    description: 'Festive festive-ready kurta pyjama paired with a tailored micro-jacquard festive vest.',
+    description: 'Festive-ready kurta pyjama paired with a tailored micro-jacquard festive vest.',
     imageUrl: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=900&q=80',
   },
   {
@@ -272,3 +270,102 @@ export const LUXURY_COUTURE_CATALOG: (Product & {
     imageUrl: 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=900&q=80',
   },
 ]
+
+interface FitVerseState {
+  products: Product[]
+  trunk: TrunkItem[]
+  photos: StudioPhoto[]
+  orders: Order[]
+  addToTrunk: (productId: string, size: string) => void
+  removeFromTrunk: (productId: string) => void
+  clearTrunk: () => void
+  productById: (id: string) => Product | undefined
+  addPhoto: (photo: { label: string; dataUrl: string }) => void
+  removePhoto: (id: string) => void
+  placeOrder: (order: Omit<Order, 'id' | 'createdAt' | 'status' | 'deposit'>) => Order
+  updateOrderStatus: (id: string, status: OrderStatus) => void
+  addProduct: (product: Omit<Product, 'id'>) => void
+}
+
+export const useFitVerse = create<FitVerseState>()(
+  persist(
+    (set, get) => ({
+      products: LUXURY_COUTURE_CATALOG as Product[],
+      trunk: [],
+      photos: [],
+      orders: [],
+
+      addToTrunk: (productId, size) => {
+        const { trunk } = get()
+        if (trunk.some((i) => i.productId === productId)) return
+        if (trunk.length >= 4) return
+        set({ trunk: [...trunk, { productId, size, addedAt: Date.now() }] })
+      },
+
+      removeFromTrunk: (productId) => {
+        set({ trunk: get().trunk.filter((i) => i.productId !== productId) })
+      },
+
+      clearTrunk: () => set({ trunk: [] }),
+
+      productById: (id) => get().products.find((p) => p.id === id),
+
+      addPhoto: ({ label, dataUrl }) => {
+        set({
+          photos: [
+            { id: 'photo_' + Date.now(), label, dataUrl, createdAt: Date.now() },
+            ...get().photos,
+          ],
+        })
+      },
+
+      removePhoto: (id) => {
+        set({ photos: get().photos.filter((p) => p.id !== id) })
+      },
+
+      placeOrder: (data) => {
+        const order: Order = {
+          ...data,
+          id: 'PK-' + Math.floor(100000 + Math.random() * 900000),
+          deposit: 199,
+          status: 'Pending',
+          createdAt: Date.now(),
+        }
+        set({ orders: [order, ...get().orders] })
+        return order
+      },
+
+      updateOrderStatus: (id, status) => {
+        set({
+          orders: get().orders.map((o) => (o.id === id ? { ...o, status } : o)),
+        })
+      },
+
+      addProduct: (p) => {
+        const newProduct: Product = {
+          ...p,
+          id: 'pk-custom-' + Date.now(),
+        }
+        set({ products: [newProduct, ...get().products] })
+      },
+    }),
+    {
+      name: 'petikara-storage',
+    }
+  )
+)
+
+export function useAdminMetrics() {
+  const { orders, products } = useFitVerse()
+  const totalRevenue = orders.reduce((sum, o) => sum + (o.garmentValue || 0), 0)
+  const pendingTrials = orders.filter((o) => o.status === 'Pending').length
+  const completedOrders = orders.filter((o) => o.status === 'Kept').length
+
+  return {
+    totalOrders: orders.length,
+    totalRevenue,
+    pendingTrials,
+    completedOrders,
+    catalogCount: products.length,
+  }
+}
