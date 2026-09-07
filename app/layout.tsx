@@ -15,33 +15,41 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className="min-h-screen bg-background text-foreground antialiased selection:bg-gold/30 selection:text-gold">
-        {/* LUXURY NAVIGATION HEADER */}
-        <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-background/85 backdrop-blur-md">
-          <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="min-h-screen bg-[#0b0f14] text-[#f5f5f5] antialiased">
+        {/* HAUTE COUTURE TOP NAVIGATION */}
+        <header className="sticky top-0 z-50 w-full border-b border-[#222a35] bg-[#0b0f14]/90 backdrop-blur-md">
+          <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 sm:px-8">
             <Link
               href="/"
-              className="font-serif text-2xl font-bold tracking-widest text-gold-gradient uppercase"
+              className="text-2xl sm:text-3xl font-bold tracking-[0.25em] text-[#d4af37] uppercase font-serif"
             >
               Petikara
             </Link>
 
-            <nav className="flex items-center gap-4 sm:gap-6 text-xs font-medium uppercase tracking-wider">
+            <nav className="flex items-center gap-6 sm:gap-8 text-[11px] font-semibold uppercase tracking-[0.18em]">
               <Link
                 href="/"
-                className="text-foreground/80 hover:text-gold transition-colors"
+                className="text-gray-300 hover:text-[#d4af37] transition-colors"
               >
                 Home
               </Link>
               <Link
                 href="/studio"
-                className="text-foreground/80 hover:text-gold transition-colors"
+                className="text-gray-300 hover:text-[#d4af37] transition-colors"
               >
                 Try-On Studio
               </Link>
               <Link
                 href="/trunk"
-                className="rounded-full border border-gold/60 bg-gold/10 px-4 py-1.5 text-gold hover:bg-gold hover:text-black transition-all"
+                className="rounded-full border border-[#d4af37] bg-[#d4af37]/10 px-5 py-2 text-[#d4af37] hover:bg-[#d4af37] hover:text-black transition-all"
               >
                 Doorstep Trunk
               </Link>
@@ -50,7 +58,7 @@ export default function RootLayout({
         </header>
 
         {/* MAIN BODY CONTENT */}
-        <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+        <main className="w-full">
           {children}
         </main>
       </body>
