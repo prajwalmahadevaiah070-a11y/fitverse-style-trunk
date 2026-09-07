@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import { Cormorant_Garamond, Jost } from 'next/font/google'
 import { Toaster } from 'sonner'
 
+import { Navbar } from '@/components/Navbar'
 import { BottomNav } from '@/components/BottomNav'
 import { FitVerseProvider } from '@/lib/fitverse-store'
 import './globals.css'
@@ -43,12 +44,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`dark ${cormorant.variable} ${jost.variable}`}>
-      <body className="antialiased min-h-screen bg-background text-foreground">
+      <body className="antialiased min-h-screen bg-background text-foreground flex flex-col">
         <FitVerseProvider>
-          <div className="mx-auto min-h-dvh w-full max-w-7xl px-4 sm:px-6 lg:px-8 pb-24 md:pb-12">
+          <Navbar />
+          <main className="flex-1 mx-auto min-h-dvh w-full max-w-7xl px-4 sm:px-6 lg:px-8 pb-24 md:pb-12">
             {children}
+          </main>
+          <div className="md:hidden">
+            <BottomNav />
           </div>
-          <BottomNav />
           <Toaster
             theme="dark"
             position="top-center"
