@@ -4,37 +4,37 @@
 
 @layer base {
   :root {
-    --background: 220 18% 7%;
-    --foreground: 45 20% 96%;
+    --background: 40 25% 97%;          /* Warm Alabaster / Cream */
+    --foreground: 220 18% 12%;         /* Deep Charcoal Velvet */
 
-    --card: 220 18% 10%;
-    --card-foreground: 45 20% 96%;
+    --card: 0 0% 100%;                 /* Crisp Ivory Card */
+    --card-foreground: 220 18% 12%;
 
-    --popover: 220 18% 10%;
-    --popover-foreground: 45 20% 96%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 18% 12%;
 
-    --primary: 43 65% 58%;
-    --primary-foreground: 220 18% 7%;
+    --primary: 38 65% 48%;             /* Muted Royal Gold */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 14% 15%;
-    --secondary-foreground: 45 20% 96%;
+    --secondary: 40 18% 92%;
+    --secondary-foreground: 220 18% 15%;
 
-    --muted: 220 14% 18%;
-    --muted-foreground: 215 15% 65%;
+    --muted: 40 15% 92%;
+    --muted-foreground: 220 10% 45%;
 
-    --accent: 43 65% 58%;
-    --accent-foreground: 220 18% 7%;
+    --accent: 38 75% 52%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 45 20% 96%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 220 14% 18%;
-    --input: 220 14% 18%;
-    --ring: 43 65% 58%;
+    --border: 40 15% 88%;
+    --input: 40 15% 85%;
+    --ring: 38 65% 48%;
 
-    --gold: #d4af37;
-    --gold-light: #f3e5ab;
-    --gold-dark: #aa820a;
+    --gold: #b8860b;
+    --gold-light: #e6ca65;
+    --gold-dark: #8c6504;
   }
 }
 
@@ -49,19 +49,18 @@ h1, h2, h3, h4, .font-serif {
   font-family: var(--font-cormorant), serif;
 }
 
-/* Custom Luxury Gradients & Shimmers */
 .text-gold-gradient {
-  background: linear-gradient(135deg, #f7e7b4 0%, #d4af37 50%, #aa820a 100%);
+  background: linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #8c6504 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .bg-gold-gradient {
-  background: linear-gradient(135deg, #e8d082 0%, #d4af37 60%, #b89324 100%);
+  background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
 }
 
 .shadow-gold {
-  box-shadow: 0 10px 30px -10px rgba(212, 175, 55, 0.35);
+  box-shadow: 0 10px 25px -8px rgba(184, 134, 11, 0.25);
 }
 
 .hide-scrollbar::-webkit-scrollbar {
