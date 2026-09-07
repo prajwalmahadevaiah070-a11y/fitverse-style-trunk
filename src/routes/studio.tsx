@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/studio")({
   validateSearch: (search: Record<string, unknown>) => ({
-    garment: typeof search.garment === "string" ? search.garment : undefined,
+    garment: typeof search["garment"] === "string" ? (search["garment"] as string) : undefined,
   }),
   head: () => ({
     meta: [
