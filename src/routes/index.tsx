@@ -30,7 +30,7 @@ function Index() {
   const featured = products.slice(0, 6);
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 pt-10 pb-28 md:max-w-5xl md:px-6 md:pt-24">
+    <main className="mx-auto w-full max-w-7xl px-4 pt-10 pb-28 md:px-8 md:pt-16">
       <section className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-luxe md:p-10">
         <div
           className="pointer-events-none absolute -top-24 -right-16 size-64 rounded-full opacity-30 blur-3xl"
@@ -116,7 +116,7 @@ function Index() {
             See all
           </Link>
         </div>
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {featured.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
