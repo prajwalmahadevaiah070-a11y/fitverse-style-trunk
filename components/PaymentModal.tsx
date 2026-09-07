@@ -92,7 +92,7 @@ export function PaymentModal({
       .join('\n')
 
     const message = [
-      `*New FitVerse Trial Order — ${order.id}*`,
+      `*New Petikara Trial Order — ${order.id}*`,
       '',
       `*Name:* ${details.name}`,
       `*Phone:* ${details.phone}`,
