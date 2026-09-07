@@ -22,7 +22,7 @@ const jost = Jost({
 })
 
 export const metadata: Metadata = {
-  title: 'FitVerse — Indian Fashion With Doorstep Home Try-On',
+  title: 'Petikara — Indian Fashion With Doorstep Home Try-On',
   description:
     'Shop handwoven sarees, sherwanis and modern Indian labels, style them in the Digital Try-On Studio, then try four pieces at home before you pay a refundable ₹199 deposit.',
   generator: 'v0.app',
