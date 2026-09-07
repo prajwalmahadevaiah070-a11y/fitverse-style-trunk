@@ -151,7 +151,7 @@ function BrowsePage() {
             </button>
           ))}
           {category &&
-            categories[category].map((s) => (
+            (categories[category] ?? []).map((s) => (
               <button
                 key={s}
                 onClick={() => setSubcategory(subcategory === s ? null : s)}
